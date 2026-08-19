@@ -16,7 +16,6 @@ The goal is to understand **why GPUs behave the way they do**, measure that beha
 - [How to Use This Repository](#how-to-use-this-repository)
 - [Learning Philosophy](#learning-philosophy)
 - [Learning Path](#learning-path)
-- [Current Progress](#current-progress)
 - [Part I — GPU Execution](#part-i--gpu-execution)
 - [Part II — GPU Memory](#part-ii--gpu-memory)
 - [Part III — GPU Computation](#part-iii--gpu-computation)
