@@ -1,0 +1,183 @@
+# ============================================================
+# Python
+# ============================================================
+
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# Python test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Type checkers / linters
+.mypy_cache/
+.pyright/
+.ruff_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+
+# ============================================================
+# CUDA / C / C++
+# ============================================================
+
+# CUDA compiled binaries
+*.out
+*.exe
+
+# Common local CUDA build artifacts
+*.o
+*.obj
+*.a
+*.so
+*.dll
+*.dylib
+
+# CUDA cache
+.nv/
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake-build-*/
+Makefile
+makefile
+compile_commands.json
+CTestTestfile.cmake
+_deps/
+
+
+# ============================================================
+# Build output
+# ============================================================
+
+bin/
+obj/
+build/
+out/
+
+
+# ============================================================
+# IDEs and Editors
+# ============================================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*.swn
+
+# VS Code local configuration
+.history/
+
+# JetBrains
+*.iml
+
+
+# ============================================================
+# Operating System
+# ============================================================
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+Thumbs.db
+Desktop.ini
+
+# Linux temporary files
+*~
+.directory
+
+
+# ============================================================
+# Logs
+# ============================================================
+
+*.log
+logs/
+
+
+# ============================================================
+# Benchmark output
+# ============================================================
+
+# Raw benchmark outputs
+benchmarks/results/
+
+# Local profiling output
+*.nsys-rep
+*.sqlite
+*.qdrep
+*.qdstrm
+*.ncu-rep
+
+# Temporary benchmark files
+benchmark-output/
+benchmark_results/
+
+
+# ============================================================
+# Generated diagrams / temporary exports
+# ============================================================
+
+*.tmp
+*.temp
+
+# Image editing temporary files
+*.xcf
+*.kra
+
+
+# ============================================================
+# Environment / secrets
+# ============================================================
+
+.env
+.env.*
+!.env.example
+
+*.pem
+*.key
+
+# Local configuration
+config.local.*
+settings.local.*
+
+
+# ============================================================
+# OS / editor backups
+# ============================================================
+
+*.bak
+*.backup
+*.orig
+
+
+# ============================================================
+# Local executables from Lab 01
+# ============================================================
+
+hello_threads
+thread_indexing
+warp_mapping
+divergence
+device_properties
