@@ -1,0 +1,37 @@
+cff-version: 1.2.0
+
+message: "If you use this repository in your work, please cite it as follows."
+
+title: "GPU Architecture for AI"
+
+abstract: >
+  A hands-on learning repository that explains modern GPU architecture
+  and GPU execution for AI workloads, progressing from threads, warps,
+  thread blocks, SMs, and memory hierarchy to AI workloads, multi-GPU
+  systems, and production GPU engineering.
+
+authors:
+  - family-names: "Singh"
+    given-names: "Alok Ranjan"
+
+version: "0.1.0"
+
+date-released: 2026-08-19
+
+license: "MIT"
+
+repository-code: "https://github.com/arsinghin/gpu-architecture-for-ai"
+
+keywords:
+  - GPU
+  - GPU Architecture
+  - CUDA
+  - Artificial Intelligence
+  - Machine Learning
+  - Deep Learning
+  - LLM
+  - GPU Performance
+  - GPU Programming
+  - AI Systems
+
+type: software
