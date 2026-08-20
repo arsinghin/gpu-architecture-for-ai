@@ -129,7 +129,7 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 
 | Part | Focus | Status | Material |
 |:--:|--------|:------:|----------|
-| [01](#part-01--gpu-execution) | GPU Execution | ✅ Published | [Article](../01-gpu-execution/README.md) · [Lab](../01-gpu-execution/labs/README.md) |
+| [01](#part-01--gpu-execution) | GPU Execution | ✅ Published | [Read article](https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640) · [Lab](../01-gpu-execution/labs/README.md) |
 | [02](#part-02--gpu-memory) | GPU Memory | 🗓️ Planned | — |
 | [03](#part-03--tensor-cores-and-ai-compute) | Tensor Cores and AI Compute | 🗓️ Planned | — |
 | [04](#part-04--gpu-architecture-evolution) | GPU Architecture Evolution | 🗓️ Planned | — |
@@ -144,7 +144,7 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 
 ## Part 01 — GPU Execution
 
-**Article 01 — How GPUs Actually Execute AI Workloads** · ✅ Published
+**Article 01 — How GPUs Actually Execute AI Workloads** · ✅ [Published — read it here](https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640)
 
 > **Core question:** What happens inside a GPU when you run a neural network?
 
