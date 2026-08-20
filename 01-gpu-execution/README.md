@@ -305,7 +305,7 @@ That is the focus of Article 02.
 
 ## Diagrams
 
-Diagrams for this article live in [`diagrams/01-gpu-execution/`](diagrams/) — currently in progress.
+Diagrams for this article live in [`01-gpu-execution/diagrams/`](diagrams/) — currently in progress.
 
 | Diagram | Concept |
 |---------|---------|
