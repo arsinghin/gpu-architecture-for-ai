@@ -269,6 +269,7 @@ Diagrams reinforce concepts already explained in the article. They do not introd
 
 The execution model in this article is based primarily on the NVIDIA CUDA Programming Guide, which describes GPUs as collections of SMs, organizes launched threads into thread blocks and grids, and groups block threads into 32-thread warps for SIMT execution.
 
+- Alok Ranjan Singh — *The Anatomy of Silicon: How GPUs Actually Execute AI Workloads*: <https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640>
 - NVIDIA Corporation — *CUDA C++ Programming Guide*: <https://docs.nvidia.com/cuda/cuda-programming-guide/>
 
 > For implementation details, always consult the documentation for the specific GPU architecture and CUDA version being used.
