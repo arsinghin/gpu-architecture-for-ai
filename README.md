@@ -1,3 +1,5 @@
+<div align="center">
+  
 # GPU Architecture for AI
 
 **From Python code to GPU execution, memory, compute, and production AI systems.**
