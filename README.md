@@ -1,5 +1,5 @@
 <div align="center">
-  
+
 # GPU Architecture for AI
 
 **From Python code to GPU execution, memory, compute, and production AI systems.**
@@ -36,11 +36,8 @@ This repository works underneath that abstraction.
 - [Learning Path](#learning-path)
 - [Getting Started](#getting-started)
 - [Repository Structure](#repository-structure)
-- [Labs](#labs)
 - [Why CUDA?](#why-cuda)
 - [Experiments, Not Just Code](#experiments-not-just-code)
-- [Benchmarking](#benchmarking)
-- [Educational vs. Production Results](#educational-vs-production-results)
 - [Who This Is For](#who-this-is-for)
 - [Prerequisites](#prerequisites)
 - [Documentation](#documentation)
@@ -54,21 +51,7 @@ This repository works underneath that abstraction.
 
 GPU programming is often taught in disconnected pieces: CUDA, PyTorch, Tensor Cores, memory bandwidth, kernels, profiling, LLM inference. It is easy to miss how they fit together.
 
-This repository connects those layers. Every topic follows the same method:
-
-```
-Concept
-  ↓
-Explanation
-  ↓
-Runnable experiment
-  ↓
-Measurement
-  ↓
-Reasoning
-```
-
-The articles explain the concepts. The labs make them executable. The benchmarks make the behavior measurable.
+This repository connects those layers. The articles explain the concepts. The labs make them executable. The benchmarks make the behavior measurable.
 
 The goal is not to memorize GPU terminology. The goal is to build a mental model that lets you answer:
 
@@ -76,37 +59,13 @@ The goal is not to memorize GPU terminology. The goal is to build a mental model
 
 ## What This Project Covers
 
-The learning path moves from the basics to production systems:
+The learning path moves from basic execution to production systems:
 
+```text
+Python → PyTorch → GPU Operations → Kernels → Threads → Warps → Thread Blocks → SMs → Memory → Compute → Performance → AI/LLM Workloads → Multi-GPU → Production
 ```
-Python
-  ↓
-PyTorch
-  ↓
-GPU Operations
-  ↓
-Kernels
-  ↓
-Threads
-  ↓
-Warps
-  ↓
-Thread Blocks
-  ↓
-SMs
-  ↓
-Memory
-  ↓
-Compute
-  ↓
-Performance
-  ↓
-AI / LLM Workloads
-  ↓
-Multi-GPU Systems
-  ↓
-Production
-```
+
+The table below breaks this journey into ten parts.
 
 ## Learning Path
 
@@ -127,11 +86,9 @@ Parts are published in order, and each published article is accompanied by its o
 
 ## Getting Started
 
-1. **Read the published articles** listed in [`docs/roadmap.md`](docs/roadmap.md). The series starts from the basics and builds up.
+1. **Read the earliest published part** in the [Learning Path](#learning-path) table — its article companion is the folder's `README.md`.
 2. **Set up your environment** by following [`docs/setup.md`](docs/setup.md).
-3. **Run the labs** for each published article, in order.
-
-Each lab lives under `labs/` and contains numbered experiments designed to be run sequentially:
+3. **Run that part's labs**, in order. All commands run from the repository root:
 
 ```bash
 # Python experiments
@@ -141,44 +98,38 @@ python <nn-topic>/labs/python/<experiment>.py
 nvcc <nn-topic>/labs/cuda/<experiment>.cu -o experiment && ./experiment
 ```
 
-Every lab has its own `README.md` describing what its experiments demonstrate and how to interpret the results.
+Every part folder contains a `README.md` (the article companion) and a `labs/README.md` (the experiment guide, including what each experiment demonstrates and how to interpret the results).
 
 ## Repository Structure
 
-```
+The repository is organized **by part**: one numbered folder per published article, each self-contained.
+
+```text
 gpu-architecture-for-ai/
-├──  <nn-topic>/
-│   ├── README.md              # Article companion (concepts, lab map)
+│
+├── <nn-topic>/               # one folder per published part (e.g. 01-gpu-execution/)
+│   ├── README.md             # article companion: concepts, lab map, references
 │   ├── labs/
-│   │   ├── README.md          # Lab guide
-│   │   ├── python/
-│   │   └── cuda/
-│   └── diagrams/              # Visuals for this article
-├── docs/                      # Setup guide, roadmap, and glossary
+│   │   ├── README.md         # lab guide
+│   │   ├── python/           # PyTorch experiments
+│   │   └── cuda/             # CUDA C++ experiments
+│   └── diagrams/             # visuals for this article
+│
+├── docs/                     # roadmap, setup guide, glossary
+│
 ├── README.md
 ├── LICENSE
-└── CITATION.cff
+├── CITATION.cff
+└── .gitignore
 ```
 
-For every published article, a matching `<nn-topic>/` directory is added using the same convention. Each article directory contains its companion `README.md`, `labs/`, and `diagrams/` when the corresponding material exists.
+A part's folder appears only when that part is published — no empty placeholders. Future parts follow the same template: `02-gpu-memory/` · `03-tensor-cores/` · `04-nvidia-architectures/` · `05-alternative-architectures/` · `06-gpu-performance/` · `07-llm-workloads/` · `08-gpu-interconnects/` · `09-multi-gpu/` · `10-production-gpu/`.
 
-| Directory              | Purpose                                                                                                       |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `<nn-topic>/`          | Article-specific companion material, including concepts, learning objectives, labs, diagrams, and references. |
-| `<nn-topic>/labs/`     | Runnable experiments associated with the article.                                                             |
-| `<nn-topic>/diagrams/` | Version-controlled diagrams associated with the article.                                                      |
-| `docs/`                | Project documentation: roadmap, setup guide, and glossary.                                                    |
+Each lab exists to answer one question:
 
-## Labs
+> **Can we demonstrate this concept with actual code?**
 
-The `labs/` directory contains runnable experiments. A lab exists to answer one question:
-
-> Can we demonstrate this concept with actual code?
-
-Labs are intentionally small at the beginning, just enough to make a concept observable, and become more performance-oriented as the series progresses. A typical lab contains:
-
-- **Python experiments:** observing GPU behavior from the framework level using PyTorch and standard tooling.
-- **CUDA experiments:** exposing the underlying execution model directly, including threads, warps, blocks, scheduling, divergence, and hardware properties.
+Labs are intentionally small at the beginning — just enough to make a concept observable — and become more performance-oriented as the series progresses.
 
 ## Why CUDA?
 
@@ -194,27 +145,20 @@ A central rule of this repository:
 
 Instead of claiming "this memory-access pattern is faster," a lab lets you measure:
 
-```
+```text
 Pattern A → runtime · bandwidth · utilization
 Pattern B → runtime · bandwidth · utilization
 ```
 
 and then explains *why* the difference exists.
 
-## Benchmarking
+### Benchmarking
 
-Performance results depend on the environment. Relevant factors include:
-
-- GPU architecture, clocks, and memory configuration
-- Driver, CUDA, and framework versions
-- Input size, data type, and batch size
-- System load and thermal conditions
-
-Benchmark results should therefore include enough information for another person to reproduce the experiment.
+Performance results depend on the environment — GPU architecture and clocks, driver, CUDA, and framework versions, input sizes and data types, system load, and thermal conditions. Benchmark results must therefore include enough information for another person to reproduce the experiment. The practical checklist lives in [`docs/setup.md`](docs/setup.md#benchmarking-guidelines); the reasoning lives in the [roadmap](docs/roadmap.md#benchmarking-philosophy).
 
 > A number without context is not a benchmark. It is trivia.
 
-## Educational vs. Production Results
+### Educational vs. Production Results
 
 Some experiments in this repository are deliberately tiny. An element-wise operation is useful for learning GPU execution, but it does not tell you how an LLM serving system will behave.
 
@@ -263,7 +207,7 @@ The project starts with a very simple question:
 
 Then it keeps asking:
 
-```
+```text
 What?
  ↓
 Why?
@@ -283,7 +227,7 @@ How do we run it in production?
 
 Every topic follows the learning model:
 
-```
+```text
 Understand
  ↓
 Implement
@@ -299,7 +243,7 @@ Optimize
 
 Not:
 
-```
+```text
 Copy optimization trick
  ↓
 Hope benchmark improves
