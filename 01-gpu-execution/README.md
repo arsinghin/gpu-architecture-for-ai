@@ -10,6 +10,8 @@
 ![Lab](https://img.shields.io/badge/Lab-Available-brightgreen)
 ![Diagrams](https://img.shields.io/badge/Diagrams-In_Progress-yellow)
 
+<a href="https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640"><img alt="Read the Article" src="https://img.shields.io/badge/📖-Read_the_Article-blue"></a>
+
 Part of [GPU Architecture for AI](../README.md) · [Roadmap](../docs/roadmap.md)
 
 </div>
