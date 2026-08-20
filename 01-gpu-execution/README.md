@@ -54,7 +54,6 @@ Python → PyTorch → GPU operation → Kernel → Grid → Thread Blocks → W
   - [CUDA Experiments](#cuda-experiments)
 - [Learning Outcomes](#learning-outcomes)
 - [What This Article Does Not Cover](#what-this-article-does-not-cover)
-- [Why the Next Article Starts With Memory](#why-the-next-article-starts-with-memory)
 - [Diagrams](#diagrams)
 - [References](#references)
 - [Related Material](#related-material)
@@ -79,8 +78,6 @@ Python → PyTorch → GPU operation → Kernel → Grid → Thread Blocks → W
 | **Latency Hiding** | Multiple warps stay available for execution. When one waits for data, another runs. The GPU does not remove memory latency — it keeps useful work running while some work waits. |
 | **Divergence** | When threads in the same warp follow different control-flow paths, the warp becomes less efficient. |
 | **Occupancy** | Active warps on an SM relative to the maximum resident warps. Higher occupancy helps hide latency but does not guarantee performance. |
-
-Every concept is paired with a runnable experiment in [Lab 01](#lab-01--gpu-execution).
 
 ## From PyTorch to GPU Execution
 
@@ -227,29 +224,7 @@ Reports the properties of the GPU running the program — including its executio
 
 ## Learning Outcomes
 
-After completing this article and its lab, you should be able to mentally trace:
-
-```text
-Python
-   ↓
-PyTorch
-   ↓
-Kernel
-   ↓
-Grid
-   ↓
-Thread Block
-   ↓
-Warp
-   ↓
-Thread
-   ↓
-SM
-   ↓
-Execution Resources
-   ↓
-Memory
-```
+After completing this article and its lab, you should be able to mentally trace the full path from the [overview](#overview) — from `Python` down to `Execution + Memory` — on demand, in either direction.
 
 You should also understand three distinctions that correct common intuition:
 
@@ -268,40 +243,6 @@ This article deliberately does not attempt to fully explain topics that require 
 | Memory systems | HBM, GDDR, memory bandwidth, coalescing, tiling, arithmetic intensity, Roofline analysis | Article 02 |
 | AI compute | Tensor Cores, FP8, FP4 | Article 03 |
 | Multi-GPU and production | multi-GPU communication, NVLink, distributed inference, production serving | Articles 08–10 |
-
-## Why the Next Article Starts With Memory
-
-Once you understand the execution hierarchy:
-
-```text
-Thread → Warp → Block → SM
-```
-
-the next question becomes:
-
-> **Where does the data come from?**
-
-That leads through the memory hierarchy:
-
-```text
-Registers
-   ↓
-Shared Memory
-   ↓
-L1
-   ↓
-L2
-   ↓
-GPU Device Memory
-   ↓
-Host Memory
-```
-
-and eventually to:
-
-**Latency · Bandwidth · Capacity · Data Reuse · Arithmetic Intensity · Roofline Model**
-
-That is the focus of Article 02.
 
 ## Diagrams
 
@@ -335,12 +276,42 @@ The execution model in this article is based primarily on the NVIDIA CUDA Progra
 | Resource | Location |
 |----------|----------|
 | Main project | [`README.md`](../README.md) |
-| Lab 01 — GPU Execution | [`labs/01-gpu-execution/`](labs/) |
+| Lab 01 — GPU Execution | [`01-gpu-execution/labs/`](labs/) |
 | Setup guide | [`docs/setup.md`](../docs/setup.md) |
 | Project roadmap | [`docs/roadmap.md`](../docs/roadmap.md) |
 | Glossary | [`docs/glossary.md`](../docs/glossary.md) |
 
 ## Next: Article 02 — GPU Memory
+
+Once you understand the execution hierarchy:
+
+```text
+Thread → Warp → Block → SM
+```
+
+the next question becomes:
+
+> **Where does the data come from?**
+
+That leads through the memory hierarchy:
+
+```text
+Registers
+   ↓
+Shared Memory
+   ↓
+L1
+   ↓
+L2
+   ↓
+GPU Device Memory
+   ↓
+Host Memory
+```
+
+and eventually to **Latency · Bandwidth · Capacity · Data Reuse · Arithmetic Intensity · Roofline Model**.
+
+That is the focus of the next article:
 
 **GPU Memory Explained: HBM, SRAM, Cache and the Memory Wall**
 
