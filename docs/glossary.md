@@ -84,7 +84,7 @@ The amount of data that can be transferred per unit of time.
 
 For GPU memory, bandwidth is commonly expressed in GB/s or TB/s. High bandwidth allows the GPU to move large amounts of data quickly.
 
-See also: [Latency](#latency), [Memory Bandwidth](#memory-bandwidth).
+Latency is a different property: a memory system can have high bandwidth while individual accesses still experience significant latency. See also: [Latency](#latency).
 
 ### Batch Size
 
@@ -102,11 +102,9 @@ Batching can improve hardware utilization and throughput. However, larger batche
 
 ### Block
 
-Short name for a [thread block](#thread-block).
+See [Thread Block](#thread-block).
 
-A block is a group of CUDA threads that can cooperate through mechanisms such as [shared memory](#shared-memory) and synchronization.
-
-All threads in a CUDA thread block execute on a single [SM](#sm).
+The common short name for a thread block.
 
 ### Block Dimension
 
@@ -221,9 +219,9 @@ CUDA events are commonly used to measure elapsed time on the GPU timeline.
 
 ### CUDA Kernel
 
-A function launched for execution on a CUDA-capable NVIDIA GPU.
+See [Kernel](#kernel).
 
-A kernel is executed by many GPU threads according to the launch configuration.
+The CUDA-specific term for a function executed on the GPU.
 
 ### CUDA Toolkit
 
@@ -350,15 +348,9 @@ GDDR is a type of high-speed DRAM commonly used as GPU device memory in many gra
 
 ### GEMM
 
-General Matrix-Matrix Multiplication.
+General Matrix-Matrix Multiplication — the formal name for [matrix multiplication](#matrix-multiplication) as provided by numerical libraries and AI frameworks, possibly with additional scaling or accumulation.
 
-GEMM operations are fundamental to many neural-network workloads. A simplified form is:
-
-```text
-C = A × B
-```
-
-possibly with additional scaling or accumulation.
+GEMM operations are fundamental to many neural-network workloads.
 
 ### Global Memory
 
@@ -518,9 +510,7 @@ Lane 31
 
 The time required for an operation to produce a result, or for data to become available.
 
-Latency is different from [bandwidth](#bandwidth). A memory system can have high bandwidth while individual accesses still experience significant latency.
-
-In production AI systems, "latency" may refer more specifically to:
+Latency is different from [bandwidth](#bandwidth). In production AI systems, "latency" may refer more specifically to:
 
 - request latency
 - time to first token
@@ -572,9 +562,9 @@ Matrix multiplication is one of the most important computational patterns in mod
 
 ### Memory Bandwidth
 
-The rate at which memory can transfer data — see [Bandwidth](#bandwidth).
+See [Bandwidth](#bandwidth).
 
-In GPU contexts, the term usually refers to the transfer rate of device memory ([GDDR](#gddr) or [HBM](#hbm)), expressed in GB/s or TB/s.
+In GPU contexts, the term usually refers to the transfer rate of device memory ([GDDR](#gddr) or [HBM](#hbm)).
 
 ### Memory-Bound
 
@@ -616,9 +606,9 @@ Different levels trade capacity, latency, bandwidth, and accessibility.
 
 ### Memory Latency
 
-The time between requesting data and receiving usable data.
+See [Latency](#latency).
 
-High bandwidth does not automatically mean low latency. See also: [Latency](#latency), [Bandwidth](#bandwidth).
+Specifically, the time between a memory request and usable data arriving.
 
 ### Memory Transaction
 
@@ -807,7 +797,6 @@ Shared memory is commonly used for:
 - tiling
 - cooperation between threads
 - reducing repeated accesses to larger memory
-- synchronization
 
 ### SIMD
 
@@ -919,8 +908,6 @@ It is an advanced CUDA feature and is not required for understanding the introdu
 
 See [Block Dimension](#block-dimension).
 
-The number of threads in each dimension of a thread block, exposed through `blockDim.x`, `blockDim.y`, and `blockDim.z`.
-
 ### Throughput
 
 The amount of useful work completed per unit of time.
@@ -1015,13 +1002,9 @@ contains:
 
 See [Divergence](#divergence).
 
-It occurs when threads within a warp follow different control-flow paths.
-
 ### Warp Lane
 
 See [Lane](#lane).
-
-A lane identifies a thread's position within its warp.
 
 ### Warp Scheduler
 
