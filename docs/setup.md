@@ -1,113 +1,120 @@
-# GPU Architecture for AI — Setup Guide
+<div align="center">
 
-> Set up the environment, verify your GPU, and run the first experiments.
+# Setup Guide
 
-This guide prepares your machine for the hands-on labs in this repository.
+**GPU Architecture for AI**
 
-The repository starts with NVIDIA CUDA because the first labs expose GPU execution concepts directly through CUDA.
+Set up the environment, verify your GPU, and run the first experiments.
 
-Later labs may introduce other GPU programming environments.
+![Python](https://img.shields.io/badge/Python-3.9+-3776AB?logo=python&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
+![CUDA](https://img.shields.io/badge/CUDA-76B900?logo=nvidia&logoColor=white)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20Windows-lightgrey)
 
----
+Part of [GPU Architecture for AI](../README.md) · [Roadmap](roadmap.md) · [Glossary](glossary.md)
 
-# Table of Contents
-
-* [Before You Start](#before-you-start)
-* [Hardware Requirements](#hardware-requirements)
-* [Software Requirements](#software-requirements)
-* [1. Clone the Repository](#1-clone-the-repository)
-* [2. Python Environment](#2-python-environment)
-* [3. Install PyTorch](#3-install-pytorch)
-* [4. Verify PyTorch](#4-verify-pytorch)
-* [5. NVIDIA Driver](#5-nvidia-driver)
-* [6. CUDA Toolkit](#6-cuda-toolkit)
-* [7. Verify nvcc](#7-verify-nvcc)
-* [8. Run the Python Labs](#8-run-the-python-labs)
-* [9. Compile CUDA Labs](#9-compile-cuda-labs)
-* [10. Run CUDA Labs](#10-run-cuda-labs)
-* [11. Recommended Environment Check](#11-recommended-environment-check)
-* [12. CPU-Only Machines](#12-cpu-only-machines)
-* [13. Benchmarking Rules](#13-benchmarking-rules)
-* [14. Reproducibility](#14-reproducibility)
-* [15. Common Problems](#15-common-problems)
-* [16. Debugging CUDA Programs](#16-debugging-cuda-programs)
-* [17. Environment Variables](#17-environment-variables)
-* [18. Recommended Development Workflow](#18-recommended-development-workflow)
+</div>
 
 ---
 
-# Before You Start
+## Overview
 
 This repository contains two broad types of experiments:
 
 ```text
 Python / PyTorch
-       ↓
+   ↓
 Higher-level GPU programming
 
 CUDA C++
-       ↓
+   ↓
 Lower-level GPU execution model
 ```
 
-The Python experiments are easier to start with.
+The Python experiments are easier to start with. The CUDA experiments expose the execution hierarchy more directly.
 
-The CUDA experiments expose the execution hierarchy more directly.
+The repository starts with NVIDIA CUDA because the first labs expose GPU execution concepts directly through CUDA. Later labs may introduce other GPU programming environments.
 
-If you are completely new to GPU programming, start with:
+If you are completely new to GPU programming, start with `python/01_device_check.py` and then move through the experiments in order.
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Requirements](#requirements)
+  - [Hardware](#hardware)
+  - [Software](#software)
+  - [No NVIDIA GPU?](#no-nvidia-gpu)
+- [Installation](#installation)
+  - [Step 1 — Clone the Repository](#step-1--clone-the-repository)
+  - [Step 2 — Create a Python Environment](#step-2--create-a-python-environment)
+  - [Step 3 — Install PyTorch](#step-3--install-pytorch)
+  - [Step 4 — Verify the NVIDIA Driver](#step-4--verify-the-nvidia-driver)
+  - [Step 5 — Install the CUDA Toolkit](#step-5--install-the-cuda-toolkit)
+- [Verify the Setup](#verify-the-setup)
+- [Running the Labs](#running-the-labs)
+  - [Python Experiments](#python-experiments)
+  - [CUDA Experiments](#cuda-experiments)
+- [Benchmarking Guidelines](#benchmarking-guidelines)
+- [Troubleshooting](#troubleshooting)
+- [Debugging CUDA Programs](#debugging-cuda-programs)
+- [Recommended Development Workflow](#recommended-development-workflow)
+- [Before Moving On](#before-moving-on)
+- [Next Step](#next-step)
+
+## Requirements
+
+### Hardware
+
+| Requirement | Notes |
+|-------------|-------|
+| NVIDIA GPU | CUDA-capable; a consumer GPU is sufficient for the introductory labs |
+| Working NVIDIA driver | Required for all GPU experiments |
+| Sufficient GPU memory | Only what the specific experiment needs |
+
+The early experiments are intentionally small. You do not need a data-center GPU to understand threads, blocks, warps, or basic kernels.
+
+### Software
+
+| Requirement | Notes |
+|-------------|-------|
+| Operating system | Linux, Windows, or another supported development environment |
+| Python | 3.9 or later |
+| PyTorch | Install using the [official selector](https://pytorch.org/get-started/locally/) |
+| NVIDIA driver | See [Step 4](#step-4--verify-the-nvidia-driver) |
+| CUDA Toolkit (`nvcc`) | Required only for the CUDA C++ labs |
+| Git | For cloning the repository |
+
+> **Note:** The current PyTorch installation documentation requires Python 3.9 or later and provides environment-specific installation commands. Always use the official PyTorch selector for the current command rather than copying an old command from an article.
+
+### No NVIDIA GPU?
+
+You can still read and study the repository without an NVIDIA GPU, and you can run some CPU-side Python experiments. However, the CUDA experiments require an NVIDIA CUDA-capable environment.
 
 ```text
-python/01_device_check.py
+Python explanation → can be studied without a GPU
+CUDA kernel        → requires an NVIDIA CUDA environment
 ```
 
-and then move through the experiments in order.
+Do not confuse:
 
-# Hardware Requirements
+```text
+PyTorch installed
+```
 
-## Recommended
+with:
 
-For the CUDA labs:
+```text
+CUDA-capable GPU available
+```
 
-* NVIDIA GPU
-* Working NVIDIA driver
-* CUDA-capable GPU
-* Sufficient GPU memory for the experiment being run
+These are separate things.
 
-The early experiments are intentionally small.
+## Installation
 
-You do not need a data-center GPU to understand threads, blocks, warps, or basic kernels.
-
-A consumer NVIDIA GPU is enough for most introductory experiments.
-
-# Software Requirements
-
-Recommended baseline:
-
-* Linux, Windows, or another supported development environment
-* Python 3.9+
-* PyTorch
-* NVIDIA driver
-* CUDA Toolkit for CUDA C++ labs
-* `nvcc`
-* Git
-
-The current PyTorch installation documentation requires Python 3.9 or later and provides environment-specific installation commands. Always use the official PyTorch selector for the current installation command rather than copying an old command from an article.
-
-Official PyTorch installation page:
-
-https://pytorch.org/get-started/locally/
-
-# 1. Clone the Repository
-
-Clone the repository:
+### Step 1 — Clone the Repository
 
 ```bash
 git clone <YOUR_REPOSITORY_URL>
-```
-
-Enter the repository:
-
-```bash
 cd gpu-architecture-for-ai
 ```
 
@@ -129,11 +136,9 @@ labs
 diagrams
 ```
 
-# 2. Python Environment
+### Step 2 — Create a Python Environment
 
 A virtual environment is strongly recommended.
-
-Create one:
 
 ```bash
 python3 -m venv .venv
@@ -159,24 +164,18 @@ python --version
 
 You should have Python 3.9 or newer.
 
-# 3. Install PyTorch
+### Step 3 — Install PyTorch
 
-Do not blindly copy an old PyTorch installation command from this repository.
+Do not blindly copy an old PyTorch installation command from this repository. PyTorch publishes different installation commands depending on:
 
-PyTorch publishes different installation commands depending on:
+- operating system
+- package manager
+- Python environment
+- compute platform
 
-* Operating system
-* Package manager
-* Python environment
-* Compute platform
+Use the official selector: <https://pytorch.org/get-started/locally/>
 
-Use the official selector:
-
-https://pytorch.org/get-started/locally/
-
-For a CUDA-enabled NVIDIA system, select the appropriate CUDA platform shown by the current PyTorch installer.
-
-Then verify:
+For a CUDA-enabled NVIDIA system, select the appropriate CUDA platform shown by the current PyTorch installer. Then verify:
 
 ```bash
 python -c "import torch; print(torch.__version__)"
@@ -184,23 +183,75 @@ python -c "import torch; print(torch.__version__)"
 
 The command should print the installed PyTorch version.
 
-# 4. Verify PyTorch
+### Step 4 — Verify the NVIDIA Driver
 
-Run:
-
-```bash
-python -c "import torch; print('CUDA available:', torch.cuda.is_available())"
-```
-
-If CUDA is available, also run:
+For the NVIDIA CUDA experiments, the machine needs a working NVIDIA driver.
 
 ```bash
-python -c "import torch; print(torch.cuda.get_device_name(0))"
+nvidia-smi
 ```
 
-You should see your NVIDIA GPU name.
+A working installation should display information about:
 
-You can also run the repository experiment:
+- the NVIDIA driver
+- the GPU and GPU memory
+- processes using the GPU
+- supported CUDA version information
+
+If `nvidia-smi` cannot communicate with the GPU, fix the driver/environment **before** troubleshooting CUDA code.
+
+> Do not start debugging the kernel when the operating system cannot see the GPU.
+
+### Step 5 — Install the CUDA Toolkit
+
+The CUDA Toolkit provides development tools, including `nvcc`, which compiles CUDA C++ programs.
+
+Check whether CUDA is installed:
+
+```bash
+nvcc --version
+```
+
+You should see the CUDA compiler version.
+
+The toolkit version and the driver version are related but are not the same thing. Do not assume that:
+
+```text
+CUDA Toolkit version = CUDA driver version = PyTorch CUDA build
+```
+
+They represent different parts of the software stack.
+
+Locate `nvcc` on Linux/macOS:
+
+```bash
+which nvcc
+```
+
+On Windows:
+
+```powershell
+where nvcc
+```
+
+If `nvcc` cannot be found, the CUDA compiler is either not installed or is not available through your `PATH`.
+
+## Verify the Setup
+
+Before running performance experiments, collect the environment information:
+
+```bash
+nvidia-smi
+nvcc --version
+```
+
+```bash
+python -c "import torch; print(torch.__version__)"
+python -c "import torch; print(torch.version.cuda)"
+python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CUDA unavailable')"
+```
+
+Then run the repository's device-check experiment as a smoke test:
 
 ```bash
 python labs/01-gpu-execution/python/01_device_check.py
@@ -218,109 +269,21 @@ Compute capability: ...
 GPU memory: ... GiB
 ```
 
-Exact values depend on your system.
+Exact values depend on your system. Record these values when publishing benchmark results — see [Benchmarking Guidelines](#benchmarking-guidelines).
 
-# 5. NVIDIA Driver
+## Running the Labs
 
-For NVIDIA CUDA experiments, the machine needs a working NVIDIA driver.
+Full experiment details live in the [Lab 01 README](../labs/01-gpu-execution/README.md). All commands below are run from the repository root.
 
-Run:
-
-```bash
-nvidia-smi
-```
-
-A working installation should display information about:
-
-* NVIDIA driver
-* GPU
-* GPU memory
-* Processes using the GPU
-* Supported CUDA version information
-
-If `nvidia-smi` cannot communicate with the GPU, fix the driver/environment before troubleshooting CUDA code.
-
-Do not start debugging the kernel when the operating system cannot see the GPU.
-
-# 6. CUDA Toolkit
-
-The CUDA Toolkit provides development tools including:
-
-```text
-nvcc
-```
-
-which compiles CUDA C++ programs.
-
-Check whether CUDA is installed:
-
-```bash
-nvcc --version
-```
-
-You should see the CUDA compiler version.
-
-The toolkit version and the driver version are related but are not the same thing.
-
-Do not assume that:
-
-```text
-CUDA Toolkit version
-=
-CUDA driver version
-=
-PyTorch CUDA build
-```
-
-They represent different parts of the software stack.
-
-# 7. Verify nvcc
-
-Run:
-
-```bash
-which nvcc
-```
-
-on Linux/macOS.
-
-On Windows:
-
-```powershell
-where nvcc
-```
-
-Then:
-
-```bash
-nvcc --version
-```
-
-If `nvcc` cannot be found, the CUDA compiler is either not installed or is not available through your `PATH`.
-
-# 8. Run the Python Labs
-
-From the repository root:
+### Python Experiments
 
 ```bash
 python labs/01-gpu-execution/python/01_device_check.py
-```
-
-Then:
-
-```bash
 python labs/01-gpu-execution/python/02_cpu_vs_gpu.py
-```
-
-Then:
-
-```bash
 python labs/01-gpu-execution/python/03_async_timing.py
 ```
 
-The experiments should be run in this order.
-
-They introduce:
+The experiments should be run in this order. They introduce:
 
 ```text
 Device
@@ -332,214 +295,60 @@ GPU timing
 
 before moving to lower-level CUDA.
 
-# 9. Compile CUDA Labs
+### CUDA Experiments
 
-Move to the repository root.
-
-Compile the first CUDA experiment:
+Compile all five CUDA experiments:
 
 ```bash
-nvcc -O2 \
-  labs/01-gpu-execution/cuda/01_hello_threads.cu \
-  -o hello_threads
+nvcc -O2 labs/01-gpu-execution/cuda/01_hello_threads.cu     -o hello_threads
+nvcc -O2 labs/01-gpu-execution/cuda/02_thread_indexing.cu   -o thread_indexing
+nvcc -O2 labs/01-gpu-execution/cuda/03_warp_mapping.cu      -o warp_mapping
+nvcc -O2 labs/01-gpu-execution/cuda/04_divergence.cu        -o divergence
+nvcc -O2 labs/01-gpu-execution/cuda/05_device_properties.cu -o device_properties
 ```
 
-Run:
+Then run each binary:
 
 ```bash
 ./hello_threads
-```
-
-Compile thread indexing:
-
-```bash
-nvcc -O2 \
-  labs/01-gpu-execution/cuda/02_thread_indexing.cu \
-  -o thread_indexing
-```
-
-Run:
-
-```bash
 ./thread_indexing
-```
-
-Compile warp mapping:
-
-```bash
-nvcc -O2 \
-  labs/01-gpu-execution/cuda/03_warp_mapping.cu \
-  -o warp_mapping
-```
-
-Run:
-
-```bash
 ./warp_mapping
-```
-
-Compile divergence:
-
-```bash
-nvcc -O2 \
-  labs/01-gpu-execution/cuda/04_divergence.cu \
-  -o divergence
-```
-
-Run:
-
-```bash
 ./divergence
-```
-
-Compile device properties:
-
-```bash
-nvcc -O2 \
-  labs/01-gpu-execution/cuda/05_device_properties.cu \
-  -o device_properties
-```
-
-Run:
-
-```bash
 ./device_properties
 ```
 
-# 10. Run CUDA Labs
+Run them in this order:
 
-Recommended order:
-
-```text
-01_hello_threads
-        ↓
-02_thread_indexing
-        ↓
-03_warp_mapping
-        ↓
-04_divergence
-        ↓
-05_device_properties
-```
+| # | Experiment | Question It Answers |
+|:--:|------------|---------------------|
+| 1 | `01_hello_threads` | What is a thread? |
+| 2 | `02_thread_indexing` | Where does the thread get its identity? |
+| 3 | `03_warp_mapping` | How do threads become warps? |
+| 4 | `04_divergence` | What happens when execution paths differ? |
+| 5 | `05_device_properties` | What hardware is actually available? |
 
 The progression is intentional.
 
-First:
+## Benchmarking Guidelines
 
-> What is a thread?
+Performance experiments require more care than ordinary scripts. These are the practical rules; the reasoning behind them is described in the [Benchmarking Philosophy](roadmap.md#benchmarking-philosophy) section of the roadmap.
 
-Then:
+### Warm Up
 
-> Where does the thread get its identity?
+The first execution may not represent steady-state behavior. Use warm-up iterations where appropriate.
 
-Then:
+### Repeat
 
-> How do threads become warps?
+Do not report one timing measurement as if it were a scientific constant. Run multiple iterations and, depending on the experiment, report:
 
-Then:
+- mean
+- median
+- percentile
+- range
 
-> What happens when execution paths differ?
+### Synchronize
 
-Finally:
-
-> What hardware is actually available?
-
-# 11. Recommended Environment Check
-
-Before running performance experiments, collect:
-
-```bash
-nvidia-smi
-```
-
-and:
-
-```bash
-nvcc --version
-```
-
-Then:
-
-```bash
-python -c "import torch; print(torch.__version__)"
-```
-
-and:
-
-```bash
-python -c "import torch; print(torch.version.cuda)"
-```
-
-Then:
-
-```bash
-python -c "import torch; print(torch.cuda.get_device_name(0) if torch.cuda.is_available() else 'CUDA unavailable')"
-```
-
-Record these values when publishing benchmark results.
-
-# 12. CPU-Only Machines
-
-You can still read and study the repository without an NVIDIA GPU.
-
-You can also run some CPU-side Python experiments.
-
-However, the CUDA experiments require an NVIDIA CUDA-capable environment.
-
-For example:
-
-```text
-Python explanation
-      ↓
-Can be studied without GPU
-
-CUDA kernel
-      ↓
-Requires NVIDIA CUDA environment
-```
-
-Do not confuse:
-
-```text
-PyTorch installed
-```
-
-with:
-
-```text
-CUDA-capable GPU available
-```
-
-These are separate things.
-
-# 13. Benchmarking Rules
-
-Performance experiments require more care than ordinary scripts.
-
-## Warm up
-
-The first execution may not represent steady-state behavior.
-
-Use warm-up iterations where appropriate.
-
-## Repeat
-
-Do not report one timing measurement as if it were a scientific constant.
-
-Run multiple iterations.
-
-Depending on the experiment, report:
-
-* Mean
-* Median
-* Percentile
-* Range
-
-## Synchronize
-
-GPU work can execute asynchronously.
-
-For example, this:
+GPU work can execute asynchronously. For example, this:
 
 ```python
 start = time.perf_counter()
@@ -549,24 +358,22 @@ result = gpu_operation()
 end = time.perf_counter()
 ```
 
-may not measure the complete GPU operation.
+may not measure the complete GPU operation. Use CUDA synchronization or CUDA events where appropriate.
 
-Use CUDA synchronization or CUDA events where appropriate.
-
-## Keep the workload fixed
+### Keep the Workload Fixed
 
 When comparing two implementations, keep the important variables the same:
 
-* Input size
-* Data type
-* Batch size
-* Number of iterations
-* GPU
-* Software environment
+- input size
+- data type
+- batch size
+- number of iterations
+- GPU
+- software environment
 
 Change one important variable at a time.
 
-# 14. Reproducibility
+### Record the Environment
 
 When publishing benchmark results, record:
 
@@ -602,11 +409,11 @@ Warm-up: 20
 Iterations: 100
 ```
 
-A benchmark without environment information is difficult to reproduce.
+> A benchmark without environment information is difficult to reproduce.
 
-# 15. Common Problems
+## Troubleshooting
 
-## `torch.cuda.is_available()` returns `False`
+### `torch.cuda.is_available()` returns `False`
 
 Check:
 
@@ -620,17 +427,12 @@ If `nvidia-smi` works, check:
 
 ```bash
 python -c "import torch; print(torch.__version__)"
-```
-
-```bash
 python -c "import torch; print(torch.version.cuda)"
 ```
 
-Then verify that the installed PyTorch build supports the environment.
+Then verify that the installed PyTorch build supports the environment. Use the official PyTorch installation selector for the correct package.
 
-Use the official PyTorch installation selector for the correct package.
-
-## `nvcc: command not found`
+### `nvcc: command not found`
 
 Check:
 
@@ -638,11 +440,9 @@ Check:
 which nvcc
 ```
 
-If nothing is returned, CUDA Toolkit is not available through your `PATH`.
+If nothing is returned, the CUDA Toolkit is not available through your `PATH`. Check whether the toolkit is installed and configure the environment appropriately for your operating system.
 
-Check whether the toolkit is installed and configure the environment appropriately for your operating system.
-
-## CUDA program compiles but fails at runtime
+### CUDA program compiles but fails at runtime
 
 Start with:
 
@@ -650,13 +450,11 @@ Start with:
 nvidia-smi
 ```
 
-Then check the program's CUDA error output.
-
-For development builds, add explicit error checking after kernel launches and synchronization.
+Then check the program's CUDA error output. For development builds, add explicit error checking after kernel launches and synchronization.
 
 A kernel launch can return before the GPU has completed the work, so synchronization is often useful when debugging.
 
-## `no kernel image is available for execution on the device`
+### `no kernel image is available for execution on the device`
 
 This generally means the compiled code does not contain compatible device code for the GPU architecture being used.
 
@@ -668,30 +466,24 @@ python -c "import torch; p=torch.cuda.get_device_properties(0); print(p.major, p
 
 Then inspect the CUDA compiler and architecture support for your installed toolkit.
 
-## GPU program appears to hang
+### GPU program appears to hang
 
 Possible causes include:
 
-* Invalid memory access
-* Synchronization problems
-* Incorrect indexing
-* Deadlock
-* Extremely large workloads
-* An incorrectly written kernel
+- invalid memory access
+- synchronization problems
+- incorrect indexing
+- deadlock
+- extremely large workloads
+- an incorrectly written kernel
 
-Start with a very small input.
-
-Add CUDA error checks.
-
-Use synchronization while debugging.
+Start with a very small input. Add CUDA error checks. Use synchronization while debugging.
 
 Do not immediately assume the GPU is broken.
 
-## Output order from `printf` looks strange
+### Output order from `printf` looks strange
 
-GPU threads execute concurrently.
-
-Do not expect:
+GPU threads execute concurrently. Do not expect:
 
 ```text
 Thread 0
@@ -704,47 +496,33 @@ to always print in exactly that order.
 
 The ordering of printed output is not a reliable way to infer execution order.
 
-# 16. Debugging CUDA Programs
+## Debugging CUDA Programs
 
 A useful development pattern is:
 
 ```text
 Write small kernel
-      ↓
+   ↓
 Launch small workload
-      ↓
+   ↓
 Synchronize
-      ↓
+   ↓
 Check errors
-      ↓
+   ↓
 Validate output
-      ↓
+   ↓
 Increase workload
 ```
 
 Do not start with:
 
-```text
-100 million threads
-complex shared memory
-multiple synchronization points
-```
+> 100 million threads, complex shared memory, and multiple synchronization points
 
-and then try to determine which line caused the problem.
+and then try to determine which line caused the problem. GPU debugging becomes much easier when the workload is small enough to reason about.
 
-GPU debugging becomes much easier when the workload is small enough to reason about.
+### Useful Environment Variable
 
-# 17. Environment Variables
-
-CUDA provides environment variables that can change runtime behavior.
-
-One useful debugging option is:
-
-```text
-CUDA_LAUNCH_BLOCKING=1
-```
-
-For example:
+CUDA provides environment variables that can change runtime behavior. One useful debugging option is:
 
 ```bash
 CUDA_LAUNCH_BLOCKING=1 ./my_program
@@ -752,59 +530,24 @@ CUDA_LAUNCH_BLOCKING=1 ./my_program
 
 This forces CUDA kernel launches and related operations to behave synchronously from the host's perspective, which can make errors easier to locate.
 
-Do not use synchronous execution as the default performance configuration.
+Do not use synchronous execution as the default performance configuration. It is primarily a debugging aid.
 
-It is primarily a debugging aid.
-
-# 18. Recommended Development Workflow
+## Recommended Development Workflow
 
 For every new CUDA experiment:
 
-### Step 1
+1. Write the smallest possible version.
+2. Compile with `nvcc -O2`.
+3. Run on a tiny input.
+4. Check the output.
+5. Add error handling.
+6. Increase the workload.
+7. Add timing.
+8. Repeat measurements.
+9. Record the environment.
+10. Only then optimize.
 
-Write the smallest possible version.
-
-### Step 2
-
-Compile with:
-
-```bash
-nvcc -O2 ...
-```
-
-### Step 3
-
-Run a tiny input.
-
-### Step 4
-
-Check the output.
-
-### Step 5
-
-Add error handling.
-
-### Step 6
-
-Increase the workload.
-
-### Step 7
-
-Add timing.
-
-### Step 8
-
-Repeat measurements.
-
-### Step 9
-
-Record the environment.
-
-### Step 10
-
-Only then optimize.
-
-# What You Should Understand Before Moving On
+## Before Moving On
 
 Before starting the memory labs, you should be comfortable with:
 
@@ -838,31 +581,26 @@ launch GPU work
 GPU executes asynchronously
 ```
 
-If these concepts still feel unclear, repeat Lab 01.
+If these concepts still feel unclear, repeat [Lab 01](../labs/01-gpu-execution/README.md). The next article assumes this foundation.
 
-The next article assumes this foundation.
+## Next Step
 
-# Next Step
+After completing Lab 01, the focus changes from:
 
-After completing Lab 01, move to:
-
-```text
-Article 02
-GPU Memory Explained
-```
-
-and then:
-
-```text
-labs/02-gpu-memory/
-```
-
-The focus changes from:
-
-> How does the GPU execute work?
+> **How does the GPU execute work?**
 
 to:
 
-> How does the GPU get the data needed to execute that work?
+> **How does the GPU get the data needed to execute that work?**
 
-That is where bandwidth, latency, cache behavior, coalescing, tiling, and the memory wall become important.
+That is the subject of [Article 02 — GPU Memory](roadmap.md#part-02--gpu-memory) (planned), where bandwidth, latency, cache behavior, coalescing, tiling, and the memory wall become important.
+
+---
+
+<p align="center">
+<sub>
+<a href="../README.md">Main README</a> ·
+<a href="roadmap.md">Roadmap</a> ·
+<a href="glossary.md">Glossary</a>
+</sub>
+</p>
