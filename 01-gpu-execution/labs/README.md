@@ -10,7 +10,7 @@
 
 The article explains the concepts. This lab lets you **run them**.
 
-Accompanies [01 — How GPUs Actually Execute AI Workloads](../README.md)
+Accompanies [01 — How GPUs Actually Execute AI Workloads](../README.md) · [Read the published article](https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640)
 
 Part of [GPU Architecture for AI](../../README.md) · [Roadmap](../../docs/roadmap.md)
 
