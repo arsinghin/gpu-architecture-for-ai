@@ -26,43 +26,15 @@ output = model(input)
 
 and the framework takes care of the rest. That is convenient. It is also where many performance problems become mysterious.
 
-This project works backward from that line. The articles are published externally as **The Anatomy of Silicon** series; this repository holds the labs, benchmarks, and diagrams that make the concepts runnable and measurable.
-
-> The goal is not to memorize GPU terminology. The goal is to understand **why GPUs behave the way they do**, measure that behavior with real experiments, and eventually use that knowledge to reason about production AI workloads.
-
-The complete learning path:
+This project works backward from that line, following the complete path:
 
 ```text
-Python
-  ↓
-PyTorch
-  ↓
-GPU operation
-  ↓
-Kernel
-  ↓
-Grid
-  ↓
-Thread Blocks
-  ↓
-Warps
-  ↓
-Threads
-  ↓
-SMs
-  ↓
-Execution
-  ↓
-Memory
-  ↓
-Performance
-  ↓
-AI Workloads
-  ↓
-Multi-GPU Systems
-  ↓
-Production
+Python → PyTorch → GPU operation → Kernel → Grid → Thread Blocks → Warps → Threads → SMs → Execution → Memory → Performance → AI Workloads → Multi-GPU → Production
 ```
+
+The articles are published externally as **The Anatomy of Silicon** series; this repository holds the labs, benchmarks, and diagrams that make the concepts runnable and measurable.
+
+> The goal is not to memorize GPU terminology. The goal is to understand **why GPUs behave the way they do**, measure that behavior with real experiments, and eventually use that knowledge to reason about production AI workloads.
 
 ## Table of Contents
 
@@ -80,42 +52,55 @@ Production
 - [Part 08 — GPU Interconnects](#part-08--gpu-interconnects)
 - [Part 09 — Multi-GPU Systems](#part-09--multi-gpu-systems)
 - [Part 10 — Production GPU Systems](#part-10--production-gpu-systems)
-- [Article → Lab → Experiment](#article--lab--experiment)
 - [Target Repository Structure](#target-repository-structure)
 - [Benchmarking Philosophy](#benchmarking-philosophy)
 - [Hardware Coverage](#hardware-coverage)
 - [What This Project Is Not](#what-this-project-is-not)
-- [The Progression](#the-progression)
 - [The Final Mental Model](#the-final-mental-model)
 - [How the Roadmap Will Evolve](#how-the-roadmap-will-evolve)
 
 ## How to Use This Repository
 
-The project has three connected layers:
+The project has three connected layers: **articles** (published externally) explain the concepts, **labs** (this repository) run them, and **benchmarks** measure what actually happens.
+
+Every part follows the same chain:
 
 ```text
-Articles (published externally)
-   ↓  explain the concept
-Labs (this repository)
-   ↓  run the concept
-Benchmarks
-   ↓  measure the behavior
+Article
+   │ explains
+   ↓
+Concept
+   │ implemented by
+   ↓
+Lab
+   │ measured by
+   ↓
+Experiment
+   │ produces
+   ↓
+Result
 ```
 
-The articles focus on explanation and mental models. The labs contain runnable code. The benchmarks measure what happens when the code actually runs.
-
-You do not need to read every article before touching the code. However, the recommended path is:
+For example:
 
 ```text
-Read
-  ↓
-Run
-  ↓
-Change the code
-  ↓
-Measure
-  ↓
-Explain what happened
+Article 01: "Threads are grouped into warps"
+   ↓
+labs: warp_mapping.cu
+   ↓
+Run on GPU → observe warp/lane mapping
+
+Article 02: "Memory access patterns matter"
+   ↓
+labs: coalesced_access.cu · strided_access.cu
+   ↓
+Benchmark → compare bandwidth
+```
+
+The recommended way to work through any part:
+
+```text
+Read → Run → Change the code → Measure → Explain what happened
 ```
 
 That last step matters.
@@ -124,25 +109,11 @@ That last step matters.
 
 ## Learning Philosophy
 
-The project follows a simple progression, from mental model to production system:
+The project deliberately avoids jumping directly into advanced GPU optimization.
 
-```text
-Mental Model
-  ↓
-Runnable Example
-  ↓
-Measurement
-  ↓
-Optimization
-  ↓
-Architecture
-  ↓
-System Design
-  ↓
-Production
-```
+> You cannot meaningfully optimize something you cannot mentally trace.
 
-Each stage answers a different question:
+Each stage of the series answers a different question:
 
 | Stage | Question |
 |-------|----------|
@@ -152,17 +123,13 @@ Each stage answers a different question:
 | Performance Engineering | What is limiting it? |
 | Production Engineering | How do I design the entire system around those limits? |
 
-The project deliberately avoids jumping directly into advanced GPU optimization.
-
-> You cannot meaningfully optimize something you cannot mentally trace.
-
 ## The Series at a Glance
 
 The series is planned as **ten parts**. Each part builds on the previous one, and parts are published in order. Only Part 01 has been released so far.
 
 | Part | Focus | Status | Material |
 |:--:|--------|:------:|----------|
-| [01](#part-01--gpu-execution) | GPU Execution | ✅ Published | [Article](../articles/01-gpu-execution/README.md) · [Lab](../labs/01-gpu-execution/README.md) |
+| [01](#part-01--gpu-execution) | GPU Execution | ✅ Published | [Article](../01-gpu-execution/README.md) · [Lab](../01-gpu-execution/labs/README.md) |
 | [02](#part-02--gpu-memory) | GPU Memory | 🗓️ Planned | — |
 | [03](#part-03--tensor-cores-and-ai-compute) | Tensor Cores and AI Compute | 🗓️ Planned | — |
 | [04](#part-04--gpu-architecture-evolution) | GPU Architecture Evolution | 🗓️ Planned | — |
@@ -172,28 +139,6 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 | [08](#part-08--gpu-interconnects) | GPU Interconnects | 🗓️ Planned | — |
 | [09](#part-09--multi-gpu-systems) | Multi-GPU Systems | 🗓️ Planned | — |
 | [10](#part-10--production-gpu-systems) | Production GPU Systems | 🗓️ Planned | — |
-
-```text
-01 GPU Execution
-   ↓
-02 GPU Memory
-   ↓
-03 Tensor Cores and AI Compute
-   ↓
-04 GPU Architecture Evolution
-   ↓
-05 GPU Architecture Beyond NVIDIA
-   ↓
-06 GPU Performance Engineering
-   ↓
-07 GPU Execution of LLMs
-   ↓
-08 GPU Interconnects
-   ↓
-09 Multi-GPU Systems
-   ↓
-10 Production GPU Systems
-```
 
 ---
 
@@ -214,7 +159,7 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 - Latency hiding, occupancy, divergence
 - PyTorch execution and asynchronous execution
 
-**Lab:** [`labs/01-gpu-execution/`](../labs/01-gpu-execution/) — available · **Diagrams:** `diagrams/01-gpu-execution/` — in progress
+**Lab:** [`01-gpu-execution/labs/`](../01-gpu-execution/labs/) — available · **Diagrams:** `01-gpu-execution/diagrams/` — in progress
 
 **Experiments**
 
@@ -246,7 +191,7 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 - Arithmetic intensity and the Roofline model
 - Compute-bound vs. memory-bound workloads
 
-**Lab:** `labs/02-gpu-memory/` — planned
+**Lab:** `02-gpu-memory/labs/` — planned
 
 **Experiments**
 
@@ -261,14 +206,7 @@ The series is planned as **ten parts**. Each part builds on the previous one, an
 
 **Key demonstration**
 
-Run mathematically similar operations with different memory-access patterns, then measure:
-
-- execution time
-- effective bandwidth
-- memory traffic
-- slowdown
-
-The purpose is to turn:
+Run mathematically similar operations with different memory-access patterns, then measure execution time, effective bandwidth, memory traffic, and slowdown. The purpose is to turn:
 
 > "Memory access matters"
 
@@ -293,7 +231,7 @@ into:
 - Precision vs. performance · accumulation precision
 - Quantization and sparsity
 
-**Lab:** `labs/03-tensor-cores/` — planned
+**Lab:** `03-tensor-cores/labs/` — planned
 
 **Experiments**
 
@@ -325,7 +263,7 @@ into:
 - Interconnect evolution
 - Packaging
 
-**Lab:** `labs/04-nvidia-architectures/` — planned
+**Lab:** `04-nvidia-architectures/labs/` — planned
 
 > **Goal:** Do not memorize specifications. Understand what changed — and why those changes matter for workloads.
 
@@ -348,7 +286,7 @@ into:
 - Software ecosystems
 - AI acceleration
 
-**Lab:** `labs/05-alternative-architectures/` — planned
+**Lab:** `05-alternative-architectures/labs/` — planned
 
 > **Important rule:** Do not force different architectures into NVIDIA terminology. These terms are related conceptually but are **not** interchangeable:
 
@@ -378,18 +316,11 @@ into:
 
 **Tools:** PyTorch Profiler · NVIDIA Nsight Systems · NVIDIA Nsight Compute · CUDA events · CUDA runtime APIs
 
-**Lab:** `labs/06-gpu-performance/` — planned
+**Lab:** `06-gpu-performance/labs/` — planned
 
 **Experiments**
 
-Compare a naive kernel against an optimized kernel, and measure:
-
-- latency
-- throughput
-- achieved bandwidth
-- utilization
-- occupancy
-- instruction behavior
+Compare a naive kernel against an optimized kernel, and measure latency, throughput, achieved bandwidth, utilization, occupancy, and instruction behavior.
 
 > **Objective:** Answer *"What is the bottleneck?"* — not *"Which optimization trick should I try next?"*
 
@@ -410,20 +341,11 @@ Compare a naive kernel against an optimized kernel, and measure:
 - Memory bandwidth and compute throughput
 - Quantization
 
-**Lab:** `labs/07-llm-workloads/` — planned
+**Lab:** `07-llm-workloads/labs/` — planned
 
 **Experiments**
 
-Measure:
-
-- prefill latency
-- decode latency
-- tokens/sec
-- memory usage
-- batch-size scaling
-- sequence-length scaling
-
-Compare batch sizes 1, 2, 4, 8, …
+Measure prefill latency, decode latency, tokens/sec, memory usage, batch-size scaling, and sequence-length scaling — comparing batch sizes 1, 2, 4, 8, …
 
 > **Goal:** Connect low-level GPU behavior with real LLM serving behavior.
 
@@ -441,17 +363,11 @@ Compare batch sizes 1, 2, 4, 8, …
 - Communication bandwidth and latency
 - Collective communication
 
-**Lab:** `labs/08-gpu-interconnects/` — planned
+**Lab:** `08-gpu-interconnects/labs/` — planned
 
 **Experiments**
 
-Measure:
-
-- CPU → GPU
-- GPU → CPU
-- GPU → GPU
-
-Then compare the effect of topology and communication path where the hardware supports it.
+Measure CPU → GPU, GPU → CPU, and GPU → GPU transfers, then compare the effect of topology and communication path where the hardware supports it.
 
 ## Part 09 — Multi-GPU Systems
 
@@ -467,16 +383,11 @@ Then compare the effect of topology and communication path where the hardware su
 - Communication overhead
 - Scaling efficiency
 
-**Lab:** `labs/09-multi-gpu/` — planned
+**Lab:** `09-multi-gpu/labs/` — planned
 
 **Experiments**
 
-Compare 1, 2, and 4 GPUs (where available), and measure:
-
-- throughput
-- scaling efficiency
-- communication overhead
-- synchronization overhead
+Compare 1, 2, and 4 GPUs (where available), measuring throughput, scaling efficiency, communication overhead, and synchronization overhead.
 
 > **Important lesson:** More GPUs do not automatically mean proportionally more performance.
 
@@ -498,70 +409,15 @@ Compare 1, 2, and 4 GPUs (where available), and measure:
 - Monitoring and profiling
 - Cost per request, cost per token, capacity planning
 
-**Lab:** `labs/10-production-gpu/` — planned
+**Lab:** `10-production-gpu/labs/` — planned
 
 > **Goal:** Move from *GPU optimization* to *system optimization*. A production system is not successful because one kernel is fast. It is successful when the entire system meets its latency, throughput, reliability, and cost requirements.
 
 ---
 
-## Article → Lab → Experiment
-
-Every article should eventually have this relationship:
-
-```text
-Article
-   │ explains
-   ↓
-Concept
-   │ implemented by
-   ↓
-Lab
-   │ measured by
-   ↓
-Experiment
-   │ produces
-   ↓
-Result
-```
-
-For example:
-
-**Article 01:**
-
-```text
-Article 01
-   ↓
-"Threads are grouped into warps"
-   ↓
-warp_mapping.cu
-   ↓
-Run on GPU
-   ↓
-Observe warp/lane mapping
-```
-
-**Article 02:**
-
-```text
-Article 02
-   ↓
-"Memory access patterns matter"
-   ↓
-coalesced_access.cu
-strided_access.cu
-   ↓
-Run benchmark
-   ↓
-Measure bandwidth
-   ↓
-Compare results
-```
-
-This keeps the repository connected to the actual learning objectives.
-
 ## Target Repository Structure
 
-The repository grows together with the article series. The intended long-term structure is:
+The repository is organized **by part**: each published article gets one self-contained folder holding its companion material, labs, and diagrams. The current repository is a subset of this layout — a part's folder appears only when the part is published, and its optional subfolders (`benchmarks/`, `notebooks/`) only when the corresponding material exists.
 
 ```text
 gpu-architecture-for-ai/
@@ -571,137 +427,54 @@ gpu-architecture-for-ai/
 ├── CITATION.cff
 ├── .gitignore
 │
-├── articles/
-│   ├── 01-gpu-execution/
-│   ├── 02-gpu-memory/
-│   ├── 03-tensor-cores/
-│   ├── 04-nvidia-architectures/
-│   ├── 05-alternative-architectures/
-│   ├── 06-gpu-performance/
-│   ├── 07-llm-workloads/
-│   ├── 08-gpu-interconnects/
-│   ├── 09-multi-gpu/
-│   └── 10-production-gpu/
-│
-├── labs/
-│   ├── 01-gpu-execution/
-│   ├── 02-gpu-memory/
-│   ├── 03-tensor-cores/
-│   ├── 04-nvidia-architectures/
-│   ├── 05-alternative-architectures/
-│   ├── 06-gpu-performance/
-│   ├── 07-llm-workloads/
-│   ├── 08-gpu-interconnects/
-│   ├── 09-multi-gpu/
-│   └── 10-production-gpu/
-│
-├── benchmarks/
-│   ├── scripts/
-│   ├── results/
-│   └── schemas/
-│
-├── notebooks/
-│
-├── diagrams/
-│
-├── docs/
+├── docs/                     # project-wide documentation
 │   ├── roadmap.md
-│   ├── glossary.md
-│   ├── hardware-matrix.md
-│   └── troubleshooting.md
+│   ├── setup.md
+│   └── glossary.md
 │
-└── scripts/
+├── scripts/                  # repository tooling
+│
+└── 01-gpu-execution/         # one folder per published part
+    ├── README.md             # article companion: concepts, lab map, references
+    ├── labs/                 # runnable experiments
+    │   ├── README.md
+    │   ├── python/
+    │   └── cuda/
+    └── diagrams/             # visuals for this article
 ```
 
-This is the target structure. It does not mean every directory needs to exist immediately — the current repository is a subset of this layout. Directories are added when their corresponding article or experiment exists.
+Future parts follow the same internal template:
+
+```text
+02-gpu-memory/ · 03-tensor-cores/ · 04-nvidia-architectures/ ·
+05-alternative-architectures/ · 06-gpu-performance/ · 07-llm-workloads/ ·
+08-gpu-interconnects/ · 09-multi-gpu/ · 10-production-gpu/
+```
 
 ## Benchmarking Philosophy
 
-The repository will eventually contain many performance measurements. Those measurements should follow a few rules.
+Every performance claim in this repository follows the same rules — measure first, explain second:
 
-### 1. Never Trust a Single Run
+| Rule | Why |
+|------|-----|
+| Never trust a single run | Warm-up, clocks, cache state, background load, and thermals all vary between executions. |
+| Warm up before measuring | The first execution rarely represents steady-state behavior. |
+| Synchronize correctly | GPU work executes asynchronously; naive host timers can measure the wrong thing entirely. |
+| Record the environment | GPU, driver, CUDA, framework versions, OS, precision, shapes, and iteration counts — a result without context cannot be reproduced. |
+| Label educational vs. production | Tiny benchmarks demonstrate concepts; they do not predict serving performance. |
 
-GPU execution is affected by:
-
-- warm-up
-- clocks
-- background activity
-- cache state
-- system load
-- driver behavior
-- thermal conditions
-
-Use repeated measurements where appropriate.
-
-### 2. Warm Up GPU Workloads
-
-The first execution may not represent steady-state behavior. Where appropriate:
-
-```text
-Warm-up
-  ↓
-Measurement
-  ↓
-Repeated runs
-  ↓
-Summary statistic
-```
-
-### 3. Synchronize Correctly
-
-GPU operations can execute asynchronously. Do not assume:
-
-```text
-start()
-gpu_operation()
-end()
-```
-
-automatically measures GPU execution time. Use CUDA-aware timing or explicit synchronization where appropriate.
-
-### 4. Record the Environment
-
-A benchmark result should record enough information to understand its context. At minimum:
-
-- GPU and GPU memory
-- driver
-- CUDA, PyTorch, and Python versions
-- operating system
-- precision
-- input size and batch size
-- relevant configuration
-
-### 5. Separate Educational from Production Benchmarks
-
-A tiny benchmark can explain a concept. It does not automatically represent production performance.
-
-For example, ten million element-wise operations does not tell us how an entire LLM serving system behaves.
-
-The repository will clearly label simplified experiments as educational.
+Practical commands, the environment template, and troubleshooting live in the [Setup Guide](setup.md#benchmarking-guidelines).
 
 ## Hardware Coverage
 
-The project focuses heavily on NVIDIA CUDA initially because CUDA provides a mature environment for exposing GPU execution concepts. That does not mean the concepts only apply to NVIDIA GPUs.
+The project focuses heavily on NVIDIA CUDA initially because CUDA provides a mature environment for exposing GPU execution concepts — direct access to `threadIdx`, `blockIdx`, `blockDim`, `gridDim`, warps, shared memory, and kernel launches makes the execution model concrete. The current CUDA model organizes work into grids, thread blocks, and 32-thread warps executing on individual SMs.
 
-The project distinguishes between:
+That does not mean the concepts only apply to NVIDIA GPUs. The project distinguishes between:
 
 - **General GPU concepts:** parallel execution, memory hierarchy, bandwidth, latency, data reuse, matrix computation, GPU utilization
 - **Vendor-specific implementation details:** CUDA, SM, CUDA warps, Tensor Cores, NVLink, Nsight
 
-Later parts of the project introduce AMD, Intel, and Apple architectures separately.
-
-### Why CUDA Is the Initial Learning Environment
-
-CUDA is used extensively in the early labs because it provides direct access to concepts such as:
-
-- `threadIdx`, `blockIdx`, `blockDim`, `gridDim`
-- warps
-- shared memory
-- kernel launches
-
-These make the execution model concrete. The current CUDA programming model organizes work into grids, thread blocks, and 32-thread warps, with thread blocks executing on individual SMs.
-
-Later, where useful, equivalent concepts can be explored using other GPU programming environments.
+Later parts introduce AMD, Intel, and Apple architectures separately, and equivalent concepts are explored in other GPU programming environments where useful.
 
 ## What This Project Is Not
 
@@ -717,30 +490,9 @@ This repository is not intended to be:
 
 The project is specifically about building a mental model of GPU-based AI systems.
 
-## The Progression
-
-The entire project should eventually answer these questions:
-
-| Level | Question | Answered In |
-|:--:|-----------|-------------|
-| 1 | What is a GPU? | Part 01 |
-| 2 | How does a GPU execute thousands of pieces of work? | Part 01 |
-| 3 | How do threads, warps, blocks, and SMs interact? | Part 01 |
-| 4 | Where does the data live? | Part 02 |
-| 5 | Why does memory access affect performance? | Part 02 |
-| 6 | How does a GPU accelerate matrix math? | Part 03 |
-| 7 | Why do modern AI models benefit from specialized hardware? | Parts 03–04 |
-| 8 | Why does my GPU workload become slow? | Part 06 |
-| 9 | How does an LLM use the GPU? | Part 07 |
-| 10 | How do multiple GPUs communicate? | Part 08 |
-| 11 | How do we scale AI across GPUs? | Part 09 |
-| 12 | How do we turn all of this into a production system? | Part 10 |
-
-That is the destination.
-
 ## The Final Mental Model
 
-At the beginning:
+At the beginning, the journey looks like this:
 
 ```text
 AI Model
@@ -748,7 +500,7 @@ AI Model
 GPU
 ```
 
-At the end:
+At the end, every layer is understandable:
 
 ```text
 AI Model
@@ -780,7 +532,7 @@ Distributed System
 Production Service
 ```
 
-The goal of this repository is to make every layer in that diagram understandable.
+That is the destination — and the goal of this repository is to make every layer in that diagram understandable.
 
 ## How the Roadmap Will Evolve
 
@@ -791,30 +543,11 @@ Future articles may therefore:
 - add new GPU architectures
 - replace outdated examples
 - introduce new numerical formats
-- add new profiling techniques
-- add new benchmark environments
+- add new profiling techniques and benchmark environments
 - add new AI workload experiments
 - expand multi-GPU experiments
 
-The core learning path should remain stable:
-
-```text
-Execution
-  ↓
-Memory
-  ↓
-Computation
-  ↓
-Performance
-  ↓
-AI Workloads
-  ↓
-Systems
-  ↓
-Production
-```
-
-That structure should remain useful even as individual GPU generations change.
+The core learning path — execution → memory → computation → performance → AI workloads → systems → production — should remain stable even as individual GPU generations change.
 
 > Do not skip the fundamentals. The fastest way to understand advanced GPU systems is not to start with the most advanced GPU. It is to understand the simple execution model well enough that the advanced hardware becomes an extension of an existing mental model.
 
