@@ -9,7 +9,7 @@
 ![CUDA](https://img.shields.io/badge/CUDA-76B900?logo=nvidia&logoColor=white)
 ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 
-The hands-on companion to **The Anatomy of Silicon** article series.
+The hands-on companion to **[The Anatomy of Silicon](https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640)** article series.
 
 </div>
 
@@ -86,7 +86,7 @@ Parts are published in order, and each published article is accompanied by its o
 
 ## Getting Started
 
-1. **Read the earliest published part** in the [Learning Path](#learning-path) table — its article companion is the folder's `README.md`.
+1. **Read the published article** — [The Anatomy of Silicon: How GPUs Actually Execute AI Workloads](https://medium.com/@arsinghin/gpu-execution-ai-workloads-0e976fbe2640) — then open its companion, [`01-gpu-execution/README.md`](01-gpu-execution/).
 2. **Set up your environment** by following [`docs/setup.md`](docs/setup.md).
 3. **Run that part's labs**, in order. All commands run from the repository root:
 
