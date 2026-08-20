@@ -1,36 +1,82 @@
 # GPU Architecture for AI
 
-### From Python code to GPU execution, memory, compute, and production AI systems.
+**From Python code to GPU execution, memory, compute, and production AI systems.**
 
-This repository is the hands-on companion to the **The Anatomy of Silicon** article series.
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+![Python](https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white)
+![CUDA](https://img.shields.io/badge/CUDA-76B900?logo=nvidia&logoColor=white)
+![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?logo=pytorch&logoColor=white)
 
-The goal is simple:
+The hands-on companion to **The Anatomy of Silicon** article series.
 
-> **Understand what actually happens inside a GPU when AI code runs.**
+</div>
 
-Most AI engineers use GPUs every day.
+---
 
-They write:
+Most AI engineers use GPUs every day. They write:
 
 ```python
 output = model(input)
 ```
 
-and the framework handles the rest.
+and the framework handles the rest. That is useful. But when performance drops, memory fills up, inference becomes slow, or multiple GPUs refuse to scale linearly, the abstraction starts hiding the important part.
 
-That is useful.
+This repository works underneath that abstraction.
 
-But when performance drops, memory fills up, inference becomes slow, or multiple GPUs refuse to scale linearly, the abstraction starts hiding the important part.
-
-This project works underneath that abstraction.
+> **The goal is simple: understand what actually happens inside a GPU when AI code runs.**
 
 ---
+
+## Table of Contents
+
+- [Why This Repository Exists](#why-this-repository-exists)
+- [What This Project Covers](#what-this-project-covers)
+- [Learning Path](#learning-path)
+- [Getting Started](#getting-started)
+- [Repository Structure](#repository-structure)
+- [Labs](#labs)
+- [Why CUDA?](#why-cuda)
+- [Experiments, Not Just Code](#experiments-not-just-code)
+- [Benchmarking](#benchmarking)
+- [Educational vs. Production Results](#educational-vs-production-results)
+- [Who This Is For](#who-this-is-for)
+- [Prerequisites](#prerequisites)
+- [Documentation](#documentation)
+- [Project Philosophy](#project-philosophy)
+- [Contributing](#contributing)
+- [License](#license)
+- [Citation](#citation)
+- [Author](#author)
+
+## Why This Repository Exists
+
+GPU programming is often taught in disconnected pieces: CUDA, PyTorch, Tensor Cores, memory bandwidth, kernels, profiling, LLM inference. It is easy to miss how they fit together.
+
+This repository connects those layers. Every topic follows the same method:
+
+```
+Concept
+  ↓
+Explanation
+  ↓
+Runnable experiment
+  ↓
+Measurement
+  ↓
+Reasoning
+```
+
+The articles explain the concepts. The labs make them executable. The benchmarks make the behavior measurable.
+
+The goal is not to memorize GPU terminology. The goal is to build a mental model that lets you answer:
+
+> **Why is this GPU workload behaving this way?**
 
 ## What This Project Covers
 
 The learning path moves from the basics to production systems:
 
-```text
+```
 Python
   ↓
 PyTorch
@@ -60,789 +106,158 @@ Multi-GPU Systems
 Production
 ```
 
-The goal is not to memorize GPU terminology.
+## Learning Path
 
-The goal is to build a mental model that lets you answer:
+| # | Part | Guiding Question | Status |
+|:--:|------|------------------|:------:|
+| 01 | [GPU Execution](articles/) | What happens inside a GPU when AI code runs? | ✅ Published · Lab available |
+| 02 | GPU Memory | Why can a powerful GPU still be slow? | 🗓️ Planned |
+| 03 | Tensor Cores and AI Compute | Why are modern GPUs so effective at AI workloads? | 🗓️ Planned |
+| 04 | GPU Architecture Evolution | What actually changes between GPU generations? | 🗓️ Planned |
+| 05 | GPU Architecture Beyond NVIDIA | Are all GPUs built the same way? | 🗓️ Planned |
+| 06 | GPU Performance Engineering | Why is my GPU workload slow? | 🗓️ Planned |
+| 07 | GPU Execution of LLMs | What actually happens when an LLM runs on a GPU? | 🗓️ Planned |
+| 08 | GPU Interconnects | What happens when one GPU is not enough? | 🗓️ Planned |
+| 09 | Multi-GPU Systems | How do multiple GPUs work together? | 🗓️ Planned |
+| 10 | Production GPU Systems | How do we turn GPU hardware into a reliable production AI system? | 🗓️ Planned |
 
-> **Why is this GPU workload behaving this way?**
+Parts are published in order, and each published article is accompanied by its own lab. The detailed topic breakdown for every part lives in [`docs/roadmap.md`](docs/roadmap.md).
 
----
+## Getting Started
 
-# Why This Repository Exists
+1. **Read the published articles** listed in [`docs/roadmap.md`](docs/roadmap.md). The series starts from the basics and builds up.
+2. **Set up your environment** by following [`docs/setup.md`](docs/setup.md).
+3. **Run the labs** for each published article, in order.
 
-GPU programming is often taught in disconnected pieces.
-
-You learn:
-
-- CUDA
-- PyTorch
-- Tensor Cores
-- memory bandwidth
-- CUDA kernels
-- profiling
-- LLM inference
-
-but it is easy to miss how they fit together.
-
-This repository connects those layers.
-
-Each topic follows:
-
-```text
-Concept
-   ↓
-Explanation
-   ↓
-Runnable experiment
-   ↓
-Measurement
-   ↓
-Reasoning
-```
-
-The articles explain the concepts.
-
-The labs make them executable.
-
-The benchmarks make the behavior measurable.
-
----
-# Lab 01 — GPU Execution
-
-The practical experiments for Article 01 live here:
-
-```text
-labs/01-gpu-execution/
-```
-
-The lab contains:
-
-```text
-labs/01-gpu-execution/
-│
-├── README.md
-│
-├── python/
-│   ├── 01_device_check.py
-│   ├── 02_cpu_vs_gpu.py
-│   └── 03_async_timing.py
-│
-└── cuda/
-    ├── 01_hello_threads.cu
-    ├── 02_thread_indexing.cu
-    ├── 03_warp_mapping.cu
-    ├── 04_divergence.cu
-    └── 05_device_properties.cu
-```
-
-The experiments progressively demonstrate:
-
-```text
-GPU device
-    ↓
-CPU vs GPU
-    ↓
-Asynchronous execution
-    ↓
-Threads
-    ↓
-Thread indexing
-    ↓
-Warps
-    ↓
-Divergence
-    ↓
-GPU hardware properties
-```
-
----
-
-# Start Here
-
-Read Article 01 first:
-
-**The Anatomy of Silicon: How GPUs Actually Execute AI Workloads**
-
-Then run:
+Each lab lives under `labs/` and contains numbered experiments designed to be run sequentially:
 
 ```bash
-python labs/01-gpu-execution/python/01_device_check.py
+# Python experiments
+python labs/<nn-topic>/python/<experiment>.py
+
+# CUDA experiments
+nvcc labs/<nn-topic>/cuda/<experiment>.cu -o experiment && ./experiment
 ```
 
-Continue through the experiments in order.
+Every lab has its own `README.md` describing what its experiments demonstrate and how to interpret the results.
 
-Full setup instructions:
+## Repository Structure
 
-```text
-docs/setup.md
 ```
-
-Project roadmap:
-
-```text
-docs/roadmap.md
-```
-
-GPU terminology:
-
-```text
-docs/glossary.md
-```
-
----
-
-# Learning Path
-
-The complete project is planned as a progression.
-
-## 01 — GPU Execution
-
-### Question
-
-> What happens inside a GPU when AI code runs?
-
-Topics:
-
-- threads
-- warps
-- blocks
-- grids
-- SMs
-- scheduling
-- registers
-- shared memory
-- cache
-- kernels
-- divergence
-- occupancy
-- latency hiding
-
-Status:
-
-**Published + Lab available**
-
----
-
-## 02 — GPU Memory
-
-### Question
-
-> Why can a powerful GPU still be slow?
-
-Topics:
-
-- registers
-- SRAM
-- shared memory
-- L1
-- L2
-- HBM
-- GDDR
-- host RAM
-- bandwidth
-- latency
-- capacity
-- coalescing
-- tiling
-- data reuse
-- arithmetic intensity
-- Roofline Model
-- compute-bound workloads
-- memory-bound workloads
-
-Status:
-
-**Planned**
-
----
-
-## 03 — Tensor Cores and AI Compute
-
-### Question
-
-> Why are modern GPUs so effective at AI workloads?
-
-Topics:
-
-- matrix multiplication
-- GEMM
-- Tensor Cores
-- FP32
-- FP16
-- BF16
-- TF32
-- FP8
-- FP4
-- mixed precision
-- quantization
-- accumulation
-- sparsity
-
-Status:
-
-**Planned**
-
----
-
-## 04 — GPU Architecture Evolution
-
-### Question
-
-> What actually changes between GPU generations?
-
-Topics include:
-
-- Volta
-- Turing
-- Ampere
-- Ada Lovelace
-- Blackwell
-- SM evolution
-- Tensor Core evolution
-- cache changes
-- memory systems
-- specialized hardware
-- interconnects
-- packaging
-
-Status:
-
-**Planned**
-
----
-
-## 05 — GPU Architecture Beyond NVIDIA
-
-### Question
-
-> Are all GPUs built the same way?
-
-Architectures covered:
-
-- NVIDIA
-- AMD
-- Intel
-- Apple
-
-The goal is to understand the similarities and differences without pretending that vendor-specific terminology is interchangeable.
-
-Status:
-
-**Planned**
-
----
-
-## 06 — GPU Performance Engineering
-
-### Question
-
-> Why is my GPU workload slow?
-
-Topics:
-
-- profiling
-- utilization
-- occupancy
-- memory throughput
-- compute throughput
-- register pressure
-- shared-memory usage
-- cache behavior
-- divergence
-- kernel launch overhead
-- synchronization
-- kernel fusion
-- Roofline analysis
-
-Tools will include appropriate vendor and framework profiling tools.
-
-Status:
-
-**Planned**
-
----
-
-## 07 — GPU Execution of LLMs
-
-### Question
-
-> What actually happens when an LLM runs on a GPU?
-
-Topics:
-
-- transformer layers
-- matrix multiplication
-- attention
-- prefill
-- decode
-- KV cache
-- batch size
-- sequence length
-- memory bandwidth
-- compute throughput
-- quantization
-
-Status:
-
-**Planned**
-
----
-
-## 08 — GPU Interconnects
-
-### Question
-
-> What happens when one GPU is not enough?
-
-Topics:
-
-- PCIe
-- NVLink
-- NVSwitch
-- GPU topology
-- host-to-device communication
-- device-to-device communication
-- communication bandwidth
-- communication latency
-
-Status:
-
-**Planned**
-
----
-
-## 09 — Multi-GPU Systems
-
-### Question
-
-> How do multiple GPUs work together?
-
-Topics:
-
-- data parallelism
-- tensor parallelism
-- pipeline parallelism
-- model parallelism
-- all-reduce
-- all-gather
-- distributed training
-- communication overhead
-- scaling efficiency
-
-Status:
-
-**Planned**
-
----
-
-## 10 — Production GPU Systems
-
-### Question
-
-> How do we turn GPU hardware into a reliable production AI system?
-
-Topics:
-
-- model serving
-- batching
-- dynamic batching
-- concurrency
-- latency
-- throughput
-- GPU utilization
-- memory management
-- CUDA Graphs
-- kernel fusion
-- quantization
-- monitoring
-- capacity planning
-- cost per request
-- cost per token
-
-Status:
-
-**Planned**
-
----
-
-# Repository Structure
-
-```text
 gpu-architecture-for-ai/
-│
+├── articles/     # Supporting material for published articles
+├── labs/         # Runnable experiments accompanying each article
+├── diagrams/     # Source diagrams used across the project
+├── docs/         # Setup guide, roadmap, and glossary
 ├── README.md
 ├── LICENSE
-├── CITATION.cff
-├── .gitignore
-│
-├── articles/
-│   └── 01-gpu-execution/
-│       └── README.md
-│
-├── labs/
-│   └── 01-gpu-execution/
-│       ├── README.md
-│       ├── python/
-│       └── cuda/
-│
-├── diagrams/
-│   └── 01-gpu-execution/
-│
-└── docs/
-    ├── roadmap.md
-    ├── setup.md
-    └── glossary.md
+└── CITATION.cff
 ```
 
-The repository will grow as new articles and labs are published.
+For every published article, a matching set of directories is added using the same convention: `articles/<nn-topic>/`, `labs/<nn-topic>/`, and `diagrams/<nn-topic>/`. Directories for unpublished parts are not created for decoration; they are added when the corresponding material exists.
 
-Directories for unfinished articles are not created merely for decoration.
+| Directory | Purpose |
+|-----------|---------|
+| `articles/` | Article information, learning objectives, concepts covered, lab mapping, diagrams, and references. The articles themselves are published externally. |
+| `labs/` | Runnable experiments. Early labs demonstrate the execution model; later labs become increasingly performance-oriented. |
+| `diagrams/` | Version-controlled diagrams explaining concepts such as CPU vs. GPU, the GPU execution hierarchy, thread blocks and warps, SM execution, the memory hierarchy, and the path from PyTorch code to GPU execution. |
+| `docs/` | Project documentation: roadmap, setup guide, and glossary. |
 
-They will be added when the corresponding material exists.
+## Labs
 
----
+The `labs/` directory contains runnable experiments. A lab exists to answer one question:
 
-# Articles
+> Can we demonstrate this concept with actual code?
 
-The `articles/` directory contains supporting material for the published articles.
+Labs are intentionally small at the beginning, just enough to make a concept observable, and become more performance-oriented as the series progresses. A typical lab contains:
 
-Example:
+- **Python experiments:** observing GPU behavior from the framework level using PyTorch and standard tooling.
+- **CUDA experiments:** exposing the underlying execution model directly, including threads, warps, blocks, scheduling, divergence, and hardware properties.
 
-```text
-articles/
-└── 01-gpu-execution/
-    └── README.md
-```
+## Why CUDA?
 
-The article itself is published externally.
+The early labs use CUDA because it exposes the GPU execution model directly. The CUDA programming model organizes threads into thread blocks and grids: threads within a block execute on one SM, blocks in a grid can be scheduled across available SMs, and threads within a block are organized into 32-thread warps for SIMT execution.
 
-The repository contains:
+This makes CUDA a useful environment for learning the underlying execution model. However, the concepts themselves are broader than CUDA. Later articles compare other GPU architectures, including NVIDIA, AMD, Intel, and Apple.
 
-- article information
-- learning objectives
-- concepts covered
-- lab mapping
-- diagrams
-- references
-- implementation notes where useful
-
----
-
-# Labs
-
-The `labs/` directory contains runnable experiments.
-
-A lab should answer:
-
-> **Can we demonstrate this concept with actual code?**
-
-Labs are intentionally small at the beginning.
-
-Later labs become more performance-oriented.
-
----
-
-# Diagrams
-
-The `diagrams/` directory stores diagrams used by the project.
-
-For Article 01:
-
-```text
-diagrams/
-└── 01-gpu-execution/
-```
-
-The diagrams are intended to explain concepts such as:
-
-```text
-CPU vs GPU
-GPU execution hierarchy
-Thread blocks
-Warps
-SM execution
-Memory hierarchy
-PyTorch → GPU execution
-```
-
-The source diagrams should remain version-controlled where practical.
-
----
-
-# Documentation
-
-Project documentation lives under:
-
-```text
-docs/
-```
-
-## Roadmap
-
-```text
-docs/roadmap.md
-```
-
-The complete learning progression.
-
-## Setup
-
-```text
-docs/setup.md
-```
-
-Environment setup and troubleshooting.
-
-## Glossary
-
-```text
-docs/glossary.md
-```
-
-Short explanations of GPU and AI terminology.
-
----
-
-# NVIDIA CUDA
-
-The early labs use CUDA because it exposes the GPU execution model directly.
-
-The CUDA programming model organizes threads into thread blocks and grids. Threads within a block execute on one SM, while blocks in a grid can be scheduled across available SMs. NVIDIA GPUs organize threads within a block into 32-thread warps for SIMT execution. 
-
-This makes CUDA a useful environment for learning the underlying execution model.
-
-The concepts themselves are broader than CUDA.
-
-Later articles compare other GPU architectures.
-
----
-
-# Experiments, Not Just Code
+## Experiments, Not Just Code
 
 A central rule of this repository:
 
 > **Do not optimize by folklore. Measure first.**
 
-For example, instead of saying:
+Instead of claiming "this memory-access pattern is faster," a lab lets you measure:
 
-> "This memory-access pattern is faster."
-
-the lab should eventually let us measure:
-
-```text
-Pattern A
-    ↓
-Runtime
-Bandwidth
-Utilization
-
-Pattern B
-    ↓
-Runtime
-Bandwidth
-Utilization
+```
+Pattern A → runtime · bandwidth · utilization
+Pattern B → runtime · bandwidth · utilization
 ```
 
-Then explain why the difference exists.
+and then explains *why* the difference exists.
 
----
+## Benchmarking
 
-# Benchmarking
+Performance results depend on the environment. Relevant factors include:
 
-Performance results depend on the environment.
+- GPU architecture, clocks, and memory configuration
+- Driver, CUDA, and framework versions
+- Input size, data type, and batch size
+- System load and thermal conditions
 
-Relevant factors include:
+Benchmark results should therefore include enough information for another person to reproduce the experiment.
 
-- GPU architecture
-- GPU clocks
-- memory configuration
-- driver
-- CUDA version
-- framework version
-- input size
-- data type
-- batch size
-- system load
-- thermal conditions
+> A number without context is not a benchmark. It is trivia.
 
-Benchmark results should therefore include enough information to reproduce the experiment.
+## Educational vs. Production Results
 
-A number without context is not a benchmark.
+Some experiments in this repository are deliberately tiny. An element-wise operation is useful for learning GPU execution, but it does not tell you how an LLM serving system will behave.
 
-It is trivia.
+The repository therefore separates **concept demonstration** from **production performance analysis**. As the project progresses, experiments become increasingly realistic.
 
----
-
-# Educational vs Production Results
-
-Some experiments in this repository are deliberately tiny.
-
-For example:
-
-```text
-element-wise operation
-```
-
-can be useful for learning GPU execution.
-
-It does not automatically tell you how an LLM serving system will behave.
-
-The repository separates:
-
-```text
-Concept demonstration
-```
-
-from:
-
-```text
-Production performance analysis
-```
-
-As the project progresses, experiments become increasingly realistic.
-
----
-
-# Who This Is For
+## Who This Is For
 
 This project is intended for people who:
 
-- use GPUs for AI
-- use PyTorch
-- build ML systems
-- build LLM systems
-- want to understand CUDA
-- want to learn GPU performance engineering
-- work with inference systems
-- work with distributed AI systems
-- want to understand GPU architecture from first principles
+- Use GPUs for AI and PyTorch
+- Build ML, LLM, or inference systems
+- Work with distributed AI systems
+- Want to understand CUDA or GPU performance engineering
+- Want to understand GPU architecture from first principles
 
-You do not need to be a hardware engineer to start.
+You do not need to be a hardware engineer to start. You should be willing to run experiments and inspect what happens.
 
-You should be willing to run experiments and inspect what happens.
+## Prerequisites
 
----
+**Required:**
 
-# Prerequisites
+- Basic Python
+- Basic programming knowledge
 
-For Article 01:
+**Helpful but not required:**
 
-### Required
-
-- basic Python
-- basic programming knowledge
-- basic understanding of neural networks is helpful
-
-### Helpful but not required
-
+- Basic understanding of neural networks
 - PyTorch
-- Linux
-- CUDA
-- C/C++
+- Linux, CUDA, C/C++
 
-The first article starts from the basics.
+The series starts from the basics and gradually moves toward advanced GPU and system concepts.
 
-The later articles gradually move toward advanced GPU and system concepts.
+## Documentation
 
----
+| Document | Description |
+|----------|-------------|
+| [`docs/roadmap.md`](docs/roadmap.md) | The complete learning progression, including detailed topics for each part |
+| [`docs/setup.md`](docs/setup.md) | Environment setup and troubleshooting |
+| [`docs/glossary.md`](docs/glossary.md) | Short explanations of GPU and AI terminology |
 
-# Current Learning Model
-
-The project follows:
-
-```text
-Understand
-   ↓
-Implement
-   ↓
-Run
-   ↓
-Measure
-   ↓
-Explain
-   ↓
-Optimize
-```
-
-Not:
-
-```text
-Copy optimization trick
-   ↓
-Hope benchmark improves
-```
-
----
-
-# Contributing
-
-Contributions are welcome when they improve the educational value of the project.
-
-Useful contributions include:
-
-- correcting technical errors
-- improving explanations
-- adding reproducible experiments
-- improving benchmark methodology
-- adding architecture comparisons
-- improving diagrams
-- fixing bugs
-- improving documentation
-
-When proposing a performance claim, include enough information for another person to reproduce the result.
-
----
-
-# License
-
-This project is released under the MIT License.
-
-See:
-
-```text
-LICENSE
-```
-
----
-
-# Citation
-
-If this repository is useful in your work, research, article, presentation, or educational material, please cite it using:
-
-```text
-CITATION.cff
-```
-
-GitHub uses `CITATION.cff` to expose citation information for repositories that provide it.
-
----
-
-# Author
-
-**Alok Ranjan Singh**
-
-AI Engineer
-
-Topics covered across the project:
-
-- AI systems
-- GPU architecture
-- LLMs
-- AI agents
-- machine learning systems
-- performance engineering
-
----
-
-# Project Philosophy
+## Project Philosophy
 
 The project starts with a very simple question:
 
-> **When I run AI code, what is the hardware actually doing?**
+> When I run AI code, what is the hardware actually doing?
 
 Then it keeps asking:
 
-```text
+```
 What?
  ↓
 Why?
@@ -860,10 +275,56 @@ How does it scale?
 How do we run it in production?
 ```
 
+Every topic follows the learning model:
+
+```
+Understand
+ ↓
+Implement
+ ↓
+Run
+ ↓
+Measure
+ ↓
+Explain
+ ↓
+Optimize
+```
+
+Not:
+
+```
+Copy optimization trick
+ ↓
+Hope benchmark improves
+```
+
 That is the entire journey.
 
----
+## Contributing
 
-## Start Here
+Contributions are welcome when they improve the educational value of the project. Useful contributions include:
 
-**Article 01 → GPU Execution → GPU Memory → GPU Compute → Performance → AI Workloads → Multi-GPU → Production**
+- Correcting technical errors
+- Improving explanations and documentation
+- Adding reproducible experiments
+- Improving benchmark methodology
+- Adding architecture comparisons
+- Improving diagrams
+- Fixing bugs
+
+When proposing a performance claim, include enough information for another person to reproduce the result.
+
+## License
+
+This project is released under the [MIT License](LICENSE).
+
+## Citation
+
+If this repository is useful in your work, research, article, presentation, or educational material, please cite it using [`CITATION.cff`](CITATION.cff). GitHub uses `CITATION.cff` to expose citation information for repositories that provide it.
+
+## Author
+
+**Alok Ranjan Singh** · AI Engineer
+
+Topics covered across the project: AI systems · GPU architecture · LLMs · AI agents · machine learning systems · performance engineering
