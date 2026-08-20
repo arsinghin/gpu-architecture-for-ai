@@ -10,7 +10,7 @@
 ![Lab](https://img.shields.io/badge/Lab-Available-brightgreen)
 ![Diagrams](https://img.shields.io/badge/Diagrams-In_Progress-yellow)
 
-Part of [GPU Architecture for AI](../../README.md) · [Roadmap](../../docs/roadmap.md)
+Part of [GPU Architecture for AI](../README.md) · [Roadmap](../docs/roadmap.md)
 
 </div>
 
@@ -112,21 +112,21 @@ Execution + Memory
 
 ## Lab 01 — GPU Execution
 
-Every concept in this article is paired with a runnable experiment in **Lab 01**, located at [`labs/01-gpu-execution/`](../../labs/01-gpu-execution/). The experiments are numbered and designed to be run in order.
+Every concept in this article is paired with a runnable experiment in **Lab 01**, located at [`01-gpu-execution/labs/`](labs/). The experiments are numbered and designed to be run in order.
 
 From the repository root:
 
 ```bash
-python labs/01-gpu-execution/python/01_device_check.py
+python 01-gpu-execution/labs/python/01_device_check.py
 ```
 
-For environment setup, see [`docs/setup.md`](../../docs/setup.md). For full lab details, see the [lab README](../../labs/01-gpu-execution/README.md).
+For environment setup, see [`docs/setup.md`](../docs/setup.md). For full lab details, see the [lab README](labs/README.md).
 
 ### Python Experiments
 
 #### 01 · Device Check
 
-**File:** [`python/01_device_check.py`](../../labs/01-gpu-execution/python/01_device_check.py)
+**File:** [`python/01_device_check.py`](labs/python/01_device_check.py)
 
 Demonstrates:
 
@@ -139,7 +139,7 @@ Demonstrates:
 
 #### 02 · CPU vs. GPU
 
-**File:** [`python/02_cpu_vs_gpu.py`](../../labs/01-gpu-execution/python/02_cpu_vs_gpu.py)
+**File:** [`python/02_cpu_vs_gpu.py`](labs/python/02_cpu_vs_gpu.py)
 
 Demonstrates:
 
@@ -152,7 +152,7 @@ Demonstrates:
 
 #### 03 · Asynchronous Timing
 
-**File:** [`python/03_async_timing.py`](../../labs/01-gpu-execution/python/03_async_timing.py)
+**File:** [`python/03_async_timing.py`](labs/python/03_async_timing.py)
 
 Demonstrates why GPU timing requires care, by comparing:
 
@@ -172,13 +172,13 @@ The main lesson:
 
 #### 01 · Hello Threads
 
-**File:** [`cuda/01_hello_threads.cu`](../../labs/01-gpu-execution/cuda/01_hello_threads.cu)
+**File:** [`cuda/01_hello_threads.cu`](labs/cuda/01_hello_threads.cu)
 
 Introduces CUDA kernels, threads, thread blocks, and kernel launches.
 
 #### 02 · Thread Indexing
 
-**File:** [`cuda/02_thread_indexing.cu`](../../labs/01-gpu-execution/cuda/02_thread_indexing.cu)
+**File:** [`cuda/02_thread_indexing.cu`](labs/cuda/02_thread_indexing.cu)
 
 Introduces `threadIdx`, `blockIdx`, `blockDim`, and `gridDim`, and the common one-dimensional global index:
 
@@ -188,7 +188,7 @@ int global_id = blockIdx.x * blockDim.x + threadIdx.x;
 
 #### 03 · Warp Mapping
 
-**File:** [`cuda/03_warp_mapping.cu`](../../labs/01-gpu-execution/cuda/03_warp_mapping.cu)
+**File:** [`cuda/03_warp_mapping.cu`](labs/cuda/03_warp_mapping.cu)
 
 Demonstrates how threads map to warps and lanes:
 
@@ -200,7 +200,7 @@ On NVIDIA CUDA GPUs: **32 threads = 1 warp.**
 
 #### 04 · Divergence
 
-**File:** [`cuda/04_divergence.cu`](../../labs/01-gpu-execution/cuda/04_divergence.cu)
+**File:** [`cuda/04_divergence.cu`](labs/cuda/04_divergence.cu)
 
 Compares a uniform control-flow pattern with a divergent pattern:
 
@@ -221,7 +221,7 @@ When threads in the same warp take different paths, the warp must account for bo
 
 #### 05 · Device Properties
 
-**File:** [`cuda/05_device_properties.cu`](../../labs/01-gpu-execution/cuda/05_device_properties.cu)
+**File:** [`cuda/05_device_properties.cu`](labs/cuda/05_device_properties.cu)
 
 Reports the properties of the GPU running the program — including its execution and memory resources — connecting the abstract programming model to actual hardware.
 
@@ -305,7 +305,7 @@ That is the focus of Article 02.
 
 ## Diagrams
 
-Diagrams for this article live in [`diagrams/01-gpu-execution/`](../../diagrams/01-gpu-execution/) — currently in progress.
+Diagrams for this article live in [`diagrams/01-gpu-execution/`](diagrams/) — currently in progress.
 
 | Diagram | Concept |
 |---------|---------|
@@ -334,11 +334,11 @@ The execution model in this article is based primarily on the NVIDIA CUDA Progra
 
 | Resource | Location |
 |----------|----------|
-| Main project | [`README.md`](../../README.md) |
-| Lab 01 — GPU Execution | [`labs/01-gpu-execution/`](../../labs/01-gpu-execution/) |
-| Setup guide | [`docs/setup.md`](../../docs/setup.md) |
-| Project roadmap | [`docs/roadmap.md`](../../docs/roadmap.md) |
-| Glossary | [`docs/glossary.md`](../../docs/glossary.md) |
+| Main project | [`README.md`](../README.md) |
+| Lab 01 — GPU Execution | [`labs/01-gpu-execution/`](labs/) |
+| Setup guide | [`docs/setup.md`](../docs/setup.md) |
+| Project roadmap | [`docs/roadmap.md`](../docs/roadmap.md) |
+| Glossary | [`docs/glossary.md`](../docs/glossary.md) |
 
 ## Next: Article 02 — GPU Memory
 
@@ -352,9 +352,9 @@ Core question:
 
 <p align="center">
 <sub>
-<a href="../../README.md">Main README</a> ·
-<a href="../../labs/01-gpu-execution/README.md">Lab 01</a> ·
-<a href="../../docs/roadmap.md">Roadmap</a> ·
-<a href="../../docs/glossary.md">Glossary</a>
+<a href="../README.md">Main README</a> ·
+<a href="labs/README.md">Lab 01</a> ·
+<a href="../docs/roadmap.md">Roadmap</a> ·
+<a href="../docs/glossary.md">Glossary</a>
 </sub>
 </p>
