@@ -10,7 +10,7 @@
 
 The article explains the concepts. This lab lets you **run them**.
 
-Accompanies [01 — How GPUs Actually Execute AI Workloads](../../articles/01-gpu-execution/README.md)
+Accompanies [01 — How GPUs Actually Execute AI Workloads](../README.md)
 
 Part of [GPU Architecture for AI](../../README.md) · [Roadmap](../../docs/roadmap.md)
 
@@ -122,7 +122,7 @@ nvcc --version
 ## Repository Structure
 
 ```text
-01-gpu-execution/
+01-gpu-execution/labs/
 │
 ├── README.md
 │
@@ -146,7 +146,7 @@ The experiments intentionally start very small. **Do not skip ahead.** The point
 All commands in this README assume your working directory is `labs/01-gpu-execution/`:
 
 ```bash
-cd labs/01-gpu-execution
+cd 01-gpu-execution/labs
 ```
 
 | # | Experiment | File |
@@ -440,7 +440,7 @@ The next problem is:
 
 > **Where does the data come from — and why can a powerful GPU still spend its time waiting?**
 
-That is the subject of [Article 02 — GPU Memory](../../docs/roadmap.md) and its lab (`labs/02-gpu-memory/`), where we will measure:
+That is the subject of [Article 02 — GPU Memory](../../02-gpu-memory/) and its lab (`02-gpu-memory/labs/`), where we will measure:
 
 - memory bandwidth
 - coalesced access
@@ -469,7 +469,7 @@ This lab is part of the [GPU Architecture for AI](../../README.md) project and i
 <p align="center">
 <sub>
 <a href="../../README.md">Main README</a> ·
-<a href="../../articles/01-gpu-execution/README.md">Article 01</a> ·
+<a href="../../01-gpu-execution/README.md">Article 01</a> ·
 <a href="../../docs/setup.md">Setup</a> ·
 <a href="../../docs/roadmap.md">Roadmap</a> ·
 <a href="../../docs/glossary.md">Glossary</a>
