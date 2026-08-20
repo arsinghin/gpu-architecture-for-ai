@@ -1,18 +1,39 @@
-# Article 01 — How GPUs Actually Execute AI Workloads
+<div align="center">
 
-## The Anatomy of Silicon
+# The Anatomy of Silicon
+
+### Article 01 — How GPUs Actually Execute AI Workloads
 
 **From Python code to threads, warps, grids, SMs, memory, and the silicon doing the actual work.**
 
+![Article](https://img.shields.io/badge/Article-Published-brightgreen)
+![Lab](https://img.shields.io/badge/Lab-Available-brightgreen)
+![Diagrams](https://img.shields.io/badge/Diagrams-In_Progress-yellow)
+
+Part of [GPU Architecture for AI](../../README.md) · [Roadmap](../../docs/roadmap.md)
+
+</div>
+
 ---
 
-# Article
+## Overview
 
-**The Anatomy of Silicon: How GPUs Actually Execute AI Workloads**
+This article explains what happens inside a GPU when an AI workload executes.
 
-The article explains what happens inside a GPU when an AI workload executes.
+> **What actually happens inside a GPU when you run a neural network?**
 
-The goal is to move from:
+Most AI frameworks hide this process. That abstraction is useful for building models. It becomes less useful when you need to understand:
+
+- GPU utilization
+- memory behavior
+- kernel performance
+- latency and throughput
+- divergence
+- occupancy
+- synchronization
+- scaling
+
+This article builds the execution model from first principles. The goal is to move from:
 
 ```python
 output = model(input)
@@ -21,272 +42,49 @@ output = model(input)
 to a mental model of:
 
 ```text
-Python
-  ↓
-PyTorch
-  ↓
-GPU operation
-  ↓
-Kernel
-  ↓
-Grid
-  ↓
-Thread Blocks
-  ↓
-Warps
-  ↓
-Threads
-  ↓
-SM
-  ↓
-Execution + Memory
+Python → PyTorch → GPU operation → Kernel → Grid → Thread Blocks → Warps → Threads → SM → Execution + Memory
 ```
 
----
-
-# Core Question
-
-> **What actually happens inside a GPU when you run a neural network?**
-
-Most AI frameworks hide this process.
-
-That abstraction is useful for building models.
-
-It becomes less useful when you need to understand:
-
-- GPU utilization
-- memory behavior
-- kernel performance
-- latency
-- throughput
-- divergence
-- occupancy
-- synchronization
-- scaling
-
-This article builds the execution model from first principles.
-
----
-
-# What You Will Learn
-
-The article covers:
-
-## CPU vs GPU
-
-Why CPUs and GPUs optimize for different goals.
-
-```text
-CPU
-→ low latency
-→ complex control flow
-→ strong single-thread performance
-
-GPU
-→ high throughput
-→ massive parallelism
-→ many concurrent threads
-```
-
----
-
-## SIMD vs SIMT
-
-How GPUs execute many threads together.
-
-The important distinction is:
-
-```text
-SIMD
-Single Instruction
-Multiple Data
-```
-
-versus:
-
-```text
-SIMT
-Single Instruction
-Multiple Threads
-```
-
----
-
-## Threads
-
-A CUDA thread is a logical unit of execution.
-
-It is not equivalent to:
-
-```text
-one physical GPU core
-```
-
-Thousands or millions of logical threads can be launched for a workload.
-
----
-
-## Thread Blocks
-
-Threads are grouped into blocks.
-
-A block provides a unit in which threads can cooperate through mechanisms such as shared memory and synchronization.
-
----
-
-## Grids
-
-A kernel launch creates a grid containing thread blocks.
-
-A large grid can contain far more blocks than the GPU can execute simultaneously.
-
-The GPU schedules blocks onto available SM resources.
-
----
-
-## Warps
-
-On NVIDIA CUDA GPUs, threads within a block are grouped into 32-thread warps.
-
-The warp is the basic grouping used by the CUDA SIMT execution model.
-
----
-
-## SMs
-
-An NVIDIA Streaming Multiprocessor is a major execution structure on the GPU.
-
-It contains resources such as:
-
-- registers
-- shared memory
-- cache resources
-- scheduling hardware
-- execution resources
-
-The exact hardware organization changes between GPU architectures.
-
----
-
-## Warp Schedulers
-
-The SM schedules eligible warp instructions for execution.
-
-When one warp is waiting, another eligible warp can be selected.
-
-This helps the GPU keep execution resources busy.
-
----
-
-## Registers
-
-Registers provide very fast storage for values used by individual threads.
-
-Registers are limited.
-
-High register usage can affect how many threads or blocks can remain resident on an SM.
-
----
-
-## Shared Memory
-
-Shared memory is an on-chip memory space available to threads within a thread block.
-
-It is commonly used for:
-
-- data reuse
-- cooperation between threads
-- tiling
-- reducing repeated accesses to slower memory
-
----
-
-## L1 and L2
-
-Caches help keep frequently accessed data closer to execution resources.
-
-A simplified view is:
-
-```text
-Registers
-   ↓
-Shared Memory / L1
-   ↓
-L2
-   ↓
-GPU Device Memory
-```
-
-The exact implementation depends on the GPU architecture.
-
----
-
-## Kernel Execution
-
-A kernel is a function executed on the GPU.
-
-The host launches the kernel with an execution configuration defining the grid and thread-block dimensions.
-
-The GPU then schedules the resulting blocks onto available execution resources.
-
----
-
-## Latency Hiding
-
-GPUs can keep multiple warps available for execution.
-
-If one warp is waiting for data, another warp may be able to execute.
-
-The GPU does not magically remove memory latency.
-
-It attempts to keep useful work available while some work waits.
-
----
-
-## Divergence
-
-If threads in the same warp follow different control-flow paths, the warp can become less efficient.
-
-For example:
-
-```cpp
-if (condition)
-{
-    ...
-}
-else
-{
-    ...
-}
-```
-
-If some threads take one path and others take the other path, the execution model must account for both paths.
-
----
-
-## Occupancy
-
-Occupancy describes how many warps are active on an SM relative to the maximum supported resident warps.
-
-Higher occupancy can help hide latency.
-
-It does not automatically mean better performance.
-
-A kernel can have high occupancy and still be slow because of:
-
-- memory bandwidth
-- instruction throughput
-- synchronization
-- memory access patterns
-- other bottlenecks
-
----
-
-# PyTorch → GPU Execution
-
-The article uses PyTorch as the bridge between AI code and GPU execution.
-
-A simplified view is:
+## Table of Contents
+
+- [What You Will Learn](#what-you-will-learn)
+- [From PyTorch to GPU Execution](#from-pytorch-to-gpu-execution)
+- [Lab 01 — GPU Execution](#lab-01--gpu-execution)
+  - [Python Experiments](#python-experiments)
+  - [CUDA Experiments](#cuda-experiments)
+- [Learning Outcomes](#learning-outcomes)
+- [What This Article Does Not Cover](#what-this-article-does-not-cover)
+- [Why the Next Article Starts With Memory](#why-the-next-article-starts-with-memory)
+- [Diagrams](#diagrams)
+- [References](#references)
+- [Related Material](#related-material)
+- [Next: Article 02](#next-article-02--gpu-memory)
+
+## What You Will Learn
+
+| Concept | Key Idea |
+|---------|----------|
+| **CPU vs. GPU** | CPUs optimize for low latency and strong single-thread performance; GPUs optimize for throughput through massive parallelism. |
+| **SIMD vs. SIMT** | How GPUs execute many threads together — SIMD (Single Instruction, Multiple Data) vs. SIMT (Single Instruction, Multiple Threads). |
+| **Threads** | A CUDA thread is a logical unit of execution — not one physical GPU core. Thousands or millions can be launched for a workload. |
+| **Thread Blocks** | Threads are grouped into blocks, which can cooperate through shared memory and synchronization. |
+| **Grids** | A kernel launch creates a grid of blocks. A grid can contain far more blocks than the GPU can run simultaneously; blocks are scheduled onto available SMs. |
+| **Warps** | Threads within a block are grouped into 32-thread warps — the basic unit of the CUDA SIMT execution model. |
+| **SMs** | A Streaming Multiprocessor is a major execution structure containing registers, shared memory, caches, and scheduling and execution resources. Organization varies by architecture. |
+| **Warp Schedulers** | The SM schedules eligible warp instructions. When one warp waits, another eligible warp executes — keeping execution resources busy. |
+| **Registers** | Very fast, limited per-thread storage. High register usage limits how many threads and blocks can stay resident on an SM. |
+| **Shared Memory** | On-chip memory available to threads within a block — used for data reuse, cooperation, tiling, and reducing repeated access to slower memory. |
+| **L1 and L2 Caches** | Keep frequently accessed data close to execution: registers → shared memory / L1 → L2 → device memory (simplified view; implementation is architecture-specific). |
+| **Kernel Execution** | A kernel is a function executed on the GPU. The host launches it with a grid/block configuration; the GPU schedules the resulting blocks. |
+| **Latency Hiding** | Multiple warps stay available for execution. When one waits for data, another runs. The GPU does not remove memory latency — it keeps useful work running while some work waits. |
+| **Divergence** | When threads in the same warp follow different control-flow paths, the warp becomes less efficient. |
+| **Occupancy** | Active warps on an SM relative to the maximum resident warps. Higher occupancy helps hide latency but does not guarantee performance. |
+
+Every concept is paired with a runnable experiment in [Lab 01](#lab-01--gpu-execution).
+
+## From PyTorch to GPU Execution
+
+The article uses PyTorch as the bridge between AI code and GPU execution:
 
 ```text
 Python
@@ -310,31 +108,25 @@ SMs
 Execution + Memory
 ```
 
-This is a mental model, not a claim that every PyTorch operation maps to exactly one simple CUDA kernel.
+> **Note:** This is a mental model — not a claim that every PyTorch operation maps to exactly one simple CUDA kernel. Frameworks and libraries use optimized implementations, fused operations, generated kernels, and specialized libraries.
 
-Frameworks and libraries can use optimized implementations, fused operations, generated kernels, and specialized libraries.
+## Lab 01 — GPU Execution
 
----
+Every concept in this article is paired with a runnable experiment in **Lab 01**, located at [`labs/01-gpu-execution/`](../../labs/01-gpu-execution/). The experiments are numbered and designed to be run in order.
 
-# The Article 01 Lab
+From the repository root:
 
-The corresponding lab is:
-
-```text
-labs/01-gpu-execution/
+```bash
+python labs/01-gpu-execution/python/01_device_check.py
 ```
 
-It contains Python and CUDA experiments.
+For environment setup, see [`docs/setup.md`](../../docs/setup.md). For full lab details, see the [lab README](../../labs/01-gpu-execution/README.md).
 
----
+### Python Experiments
 
-# Python Experiments
+#### 01 · Device Check
 
-## 01 — Device Check
-
-```text
-python/01_device_check.py
-```
+**File:** [`python/01_device_check.py`](../../labs/01-gpu-execution/python/01_device_check.py)
 
 Demonstrates:
 
@@ -345,154 +137,97 @@ Demonstrates:
 - compute capability
 - device memory
 
----
+#### 02 · CPU vs. GPU
 
-## 02 — CPU vs GPU
-
-```text
-python/02_cpu_vs_gpu.py
-```
+**File:** [`python/02_cpu_vs_gpu.py`](../../labs/01-gpu-execution/python/02_cpu_vs_gpu.py)
 
 Demonstrates:
 
-- CPU tensors
-- CUDA tensors
+- CPU tensors and CUDA tensors
 - GPU computation
 - basic GPU timing
 - synchronization
 
-The experiment is educational.
+> **Note:** This experiment is educational. It should not be treated as a universal CPU-vs-GPU benchmark.
 
-It should not be treated as a universal CPU-vs-GPU benchmark.
+#### 03 · Asynchronous Timing
 
----
+**File:** [`python/03_async_timing.py`](../../labs/01-gpu-execution/python/03_async_timing.py)
 
-## 03 — Asynchronous Timing
-
-```text
-python/03_async_timing.py
-```
-
-Demonstrates why GPU timing requires care.
-
-The experiment compares:
+Demonstrates why GPU timing requires care, by comparing:
 
 ```text
 Naive CPU timing
-        ↓
+   ↓
 Synchronized timing
-        ↓
+   ↓
 CUDA event timing
 ```
 
 The main lesson:
 
-> Launching GPU work does not necessarily mean the GPU has already finished that work.
+> Launching GPU work does not necessarily mean the GPU has finished that work.
 
----
+### CUDA Experiments
 
-# CUDA Experiments
+#### 01 · Hello Threads
 
-## 01 — Hello Threads
+**File:** [`cuda/01_hello_threads.cu`](../../labs/01-gpu-execution/cuda/01_hello_threads.cu)
 
-```text
-cuda/01_hello_threads.cu
-```
+Introduces CUDA kernels, threads, thread blocks, and kernel launches.
 
-Introduces:
+#### 02 · Thread Indexing
 
-- CUDA kernels
-- threads
-- thread blocks
-- kernel launches
+**File:** [`cuda/02_thread_indexing.cu`](../../labs/01-gpu-execution/cuda/02_thread_indexing.cu)
 
----
-
-## 02 — Thread Indexing
-
-```text
-cuda/02_thread_indexing.cu
-```
-
-Introduces:
-
-```text
-threadIdx
-blockIdx
-blockDim
-gridDim
-```
-
-and the common one-dimensional global index:
+Introduces `threadIdx`, `blockIdx`, `blockDim`, and `gridDim`, and the common one-dimensional global index:
 
 ```cpp
-int global_id =
-    blockIdx.x * blockDim.x + threadIdx.x;
+int global_id = blockIdx.x * blockDim.x + threadIdx.x;
 ```
 
----
+#### 03 · Warp Mapping
 
-## 03 — Warp Mapping
+**File:** [`cuda/03_warp_mapping.cu`](../../labs/01-gpu-execution/cuda/03_warp_mapping.cu)
+
+Demonstrates how threads map to warps and lanes:
 
 ```text
-cuda/03_warp_mapping.cu
+Thread → Warp → Lane
 ```
 
-Demonstrates:
+On NVIDIA CUDA GPUs: **32 threads = 1 warp.**
 
-```text
-Thread
-   ↓
-Warp
-   ↓
-Lane
+#### 04 · Divergence
+
+**File:** [`cuda/04_divergence.cu`](../../labs/01-gpu-execution/cuda/04_divergence.cu)
+
+Compares a uniform control-flow pattern with a divergent pattern:
+
+```cpp
+if (condition)
+{
+    // path A
+}
+else
+{
+    // path B
+}
 ```
 
-For NVIDIA CUDA:
+When threads in the same warp take different paths, the warp must account for both.
 
-```text
-32 threads
-=
-1 warp
-```
+> **Note:** This experiment is intentionally **not** presented as "divergence always causes exactly X% slowdown." Performance depends on the workload and hardware. The experiment exists to make the behavior measurable.
 
----
+#### 05 · Device Properties
 
-## 04 — Divergence
+**File:** [`cuda/05_device_properties.cu`](../../labs/01-gpu-execution/cuda/05_device_properties.cu)
 
-```text
-cuda/04_divergence.cu
-```
+Reports the properties of the GPU running the program — including its execution and memory resources — connecting the abstract programming model to actual hardware.
 
-Compares a uniform control-flow pattern with a divergent pattern.
+## Learning Outcomes
 
-The experiment is intentionally not presented as:
-
-```text
-"Divergence always causes exactly X% slowdown."
-```
-
-Performance depends on the workload and hardware.
-
-The experiment exists to make the behavior measurable.
-
----
-
-## 05 — Device Properties
-
-```text
-cuda/05_device_properties.cu
-```
-
-Reports properties of the GPU running the program, including relevant execution and memory resources.
-
-This connects the abstract programming model to actual hardware.
-
----
-
-# Learning Outcome
-
-After completing Article 01 and Lab 01, you should be able to mentally trace:
+After completing this article and its lab, you should be able to mentally trace:
 
 ```text
 Python
@@ -516,70 +251,37 @@ Execution Resources
 Memory
 ```
 
-You should also understand that:
+You should also understand three distinctions that correct common intuition:
+
+| Intuition | Reality |
+|-----------|---------|
+| A CUDA thread is a GPU core | A thread is a logical unit of execution — thousands can be in flight |
+| High GPU utilization means good performance | Utilization measures activity, not efficiency |
+| High occupancy means high performance | Occupancy helps hide latency; other bottlenecks can still dominate |
+
+## What This Article Does Not Cover
+
+This article deliberately does not attempt to fully explain topics that require their own treatment:
+
+| Area | Topics | Covered In |
+|------|--------|------------|
+| Memory systems | HBM, GDDR, memory bandwidth, coalescing, tiling, arithmetic intensity, Roofline analysis | Article 02 |
+| AI compute | Tensor Cores, FP8, FP4 | Article 03 |
+| Multi-GPU and production | multi-GPU communication, NVLink, distributed inference, production serving | Articles 08–10 |
+
+## Why the Next Article Starts With Memory
+
+Once you understand the execution hierarchy:
 
 ```text
-Thread ≠ GPU Core
-```
-
-and:
-
-```text
-GPU Utilization ≠ Automatically Good Performance
-```
-
-and:
-
-```text
-High Occupancy ≠ Automatically High Performance
-```
-
----
-
-# What This Article Does Not Cover Deeply
-
-Article 01 deliberately does not attempt to fully explain:
-
-- HBM
-- GDDR
-- memory bandwidth
-- memory coalescing
-- tiling
-- arithmetic intensity
-- Roofline analysis
-- Tensor Cores
-- FP8
-- FP4
-- multi-GPU communication
-- NVLink
-- distributed inference
-- production serving
-
-Those topics require their own explanations.
-
-They become increasingly important in later articles.
-
----
-
-# Why the Next Article Starts With Memory
-
-Once you understand:
-
-```text
-Thread
-  ↓
-Warp
-  ↓
-Block
-  ↓
-SM
+Thread → Warp → Block → SM
 ```
 
 the next question becomes:
 
-> Where does the data come from?
+> **Where does the data come from?**
 
-That leads to:
+That leads through the memory hierarchy:
 
 ```text
 Registers
@@ -595,112 +297,64 @@ GPU Device Memory
 Host Memory
 ```
 
-and eventually:
+and eventually to:
 
-```text
-Latency
-Bandwidth
-Capacity
-Data Reuse
-Arithmetic Intensity
-Roofline Model
-```
+**Latency · Bandwidth · Capacity · Data Reuse · Arithmetic Intensity · Roofline Model**
 
 That is the focus of Article 02.
 
----
+## Diagrams
 
-# Diagrams
+Diagrams for this article live in [`diagrams/01-gpu-execution/`](../../diagrams/01-gpu-execution/) — currently in progress.
 
-Article 01 diagrams are stored in:
+| Diagram | Concept |
+|---------|---------|
+| `01_cpu_vs_gpu` | CPU vs. GPU design tradeoffs |
+| `02_gpu_execution_hierarchy` | The full execution hierarchy |
+| `03_thread_block_grid` | Threads, blocks, and grids |
+| `04_warp_mapping` | Thread-to-warp and lane mapping |
+| `05_sm_execution` | SM internals and warp scheduling |
+| `06_memory_hierarchy` | Registers through device memory |
+| `07_kernel_execution` | Kernel launch and block scheduling |
+| `08_pytorch_to_gpu` | PyTorch code to GPU execution |
+| `09_latency_hiding` | Warp switching under stalls |
+| `10_warp_divergence` | Divergent control flow within a warp |
 
-```text
-diagrams/01-gpu-execution/
-```
+Diagrams reinforce concepts already explained in the article. They do not introduce unexplained terminology.
 
-Planned visual concepts include:
+## References
 
-```text
-01_cpu_vs_gpu
-02_gpu_execution_hierarchy
-03_thread_block_grid
-04_warp_mapping
-05_sm_execution
-06_memory_hierarchy
-07_kernel_execution
-08_pytorch_to_gpu
-09_latency_hiding
-10_warp_divergence
-```
+The execution model in this article is based primarily on the NVIDIA CUDA Programming Guide, which describes GPUs as collections of SMs, organizes launched threads into thread blocks and grids, and groups block threads into 32-thread warps for SIMT execution.
 
-The diagrams should reinforce concepts already explained in the article.
+- NVIDIA Corporation — *CUDA C++ Programming Guide*: <https://docs.nvidia.com/cuda/cuda-programming-guide/>
 
-They should not introduce unexplained terminology.
+> For implementation details, always consult the documentation for the specific GPU architecture and CUDA version being used.
 
----
+## Related Material
 
-# References
+| Resource | Location |
+|----------|----------|
+| Main project | [`README.md`](../../README.md) |
+| Lab 01 — GPU Execution | [`labs/01-gpu-execution/`](../../labs/01-gpu-execution/) |
+| Setup guide | [`docs/setup.md`](../../docs/setup.md) |
+| Project roadmap | [`docs/roadmap.md`](../../docs/roadmap.md) |
+| Glossary | [`docs/glossary.md`](../../docs/glossary.md) |
 
-The execution model in this article is based primarily on the NVIDIA CUDA Programming Guide.
+## Next: Article 02 — GPU Memory
 
-Official documentation:
-
-https://docs.nvidia.com/cuda/cuda-programming-guide/
-
-The CUDA programming model describes GPUs as collections of SMs, organizes launched threads into thread blocks and grids, and groups block threads into 32-thread warps for SIMT execution.
-
-For implementation details, always consult the documentation for the specific GPU architecture and CUDA version being used.
-
----
-
-# Related Repository Material
-
-Main project:
-
-```text
-../../README.md
-```
-
-Lab:
-
-```text
-../../labs/01-gpu-execution/README.md
-```
-
-Setup:
-
-```text
-../../docs/setup.md
-```
-
-Roadmap:
-
-```text
-../../docs/roadmap.md
-```
-
-Glossary:
-
-```text
-../../docs/glossary.md
-```
-
----
-
-# Status
-
-```text
-Article: Published
-Lab: Available
-Diagrams: In progress
-```
-
----
-
-# Next
-
-**Article 02 — GPU Memory Explained: HBM, SRAM, Cache and the Memory Wall**
+**GPU Memory Explained: HBM, SRAM, Cache and the Memory Wall**
 
 Core question:
 
 > **Why can a GPU with enormous compute power still be slow?**
+
+---
+
+<p align="center">
+<sub>
+<a href="../../README.md">Main README</a> ·
+<a href="../../labs/01-gpu-execution/README.md">Lab 01</a> ·
+<a href="../../docs/roadmap.md">Roadmap</a> ·
+<a href="../../docs/glossary.md">Glossary</a>
+</sub>
+</p>
