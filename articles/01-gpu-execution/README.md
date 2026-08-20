@@ -2,7 +2,7 @@
 
 # The Anatomy of Silicon
 
-### Article 01 — How GPUs Actually Execute AI Workloads
+### 01 — How GPUs Actually Execute AI Workloads
 
 **From Python code to threads, warps, grids, SMs, memory, and the silicon doing the actual work.**
 
