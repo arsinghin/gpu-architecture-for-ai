@@ -112,7 +112,7 @@ Production
 
 | # | Part | Guiding Question | Status |
 |:--:|------|------------------|:------:|
-| 01 | [GPU Execution](articles/) | What happens inside a GPU when AI code runs? | ✅ Published · Lab available |
+| 01 | [GPU Execution](01-gpu-execution/) | What happens inside a GPU when AI code runs? | ✅ Published · Lab available |
 | 02 | GPU Memory | Why can a powerful GPU still be slow? | 🗓️ Planned |
 | 03 | Tensor Cores and AI Compute | Why are modern GPUs so effective at AI workloads? | 🗓️ Planned |
 | 04 | GPU Architecture Evolution | What actually changes between GPU generations? | 🗓️ Planned |
@@ -135,10 +135,10 @@ Each lab lives under `labs/` and contains numbered experiments designed to be ru
 
 ```bash
 # Python experiments
-python labs/<nn-topic>/python/<experiment>.py
+python <nn-topic>/labs/python/<experiment>.py
 
 # CUDA experiments
-nvcc labs/<nn-topic>/cuda/<experiment>.cu -o experiment && ./experiment
+nvcc <nn-topic>/labs/cuda/<experiment>.cu -o experiment && ./experiment
 ```
 
 Every lab has its own `README.md` describing what its experiments demonstrate and how to interpret the results.
@@ -147,23 +147,27 @@ Every lab has its own `README.md` describing what its experiments demonstrate an
 
 ```
 gpu-architecture-for-ai/
-├── articles/     # Supporting material for published articles
-├── labs/         # Runnable experiments accompanying each article
-├── diagrams/     # Source diagrams used across the project
-├── docs/         # Setup guide, roadmap, and glossary
+├──  <nn-topic>/
+│   ├── README.md              # Article companion (concepts, lab map)
+│   ├── labs/
+│   │   ├── README.md          # Lab guide
+│   │   ├── python/
+│   │   └── cuda/
+│   └── diagrams/              # Visuals for this article
+├── docs/                      # Setup guide, roadmap, and glossary
 ├── README.md
 ├── LICENSE
 └── CITATION.cff
 ```
 
-For every published article, a matching set of directories is added using the same convention: `articles/<nn-topic>/`, `labs/<nn-topic>/`, and `diagrams/<nn-topic>/`. Directories for unpublished parts are not created for decoration; they are added when the corresponding material exists.
+For every published article, a matching `<nn-topic>/` directory is added using the same convention. Each article directory contains its companion `README.md`, `labs/`, and `diagrams/` when the corresponding material exists.
 
-| Directory | Purpose |
-|-----------|---------|
-| `articles/` | Article information, learning objectives, concepts covered, lab mapping, diagrams, and references. The articles themselves are published externally. |
-| `labs/` | Runnable experiments. Early labs demonstrate the execution model; later labs become increasingly performance-oriented. |
-| `diagrams/` | Version-controlled diagrams explaining concepts such as CPU vs. GPU, the GPU execution hierarchy, thread blocks and warps, SM execution, the memory hierarchy, and the path from PyTorch code to GPU execution. |
-| `docs/` | Project documentation: roadmap, setup guide, and glossary. |
+| Directory              | Purpose                                                                                                       |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `<nn-topic>/`          | Article-specific companion material, including concepts, learning objectives, labs, diagrams, and references. |
+| `<nn-topic>/labs/`     | Runnable experiments associated with the article.                                                             |
+| `<nn-topic>/diagrams/` | Version-controlled diagrams associated with the article.                                                      |
+| `docs/`                | Project documentation: roadmap, setup guide, and glossary.                                                    |
 
 ## Labs
 
