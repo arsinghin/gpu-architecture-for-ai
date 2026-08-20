@@ -41,7 +41,6 @@ Each experiment is deliberately minimal — just enough to make one concept obse
     - [Experiment 6 — Threads Become Warps](#experiment-6--threads-become-warps)
     - [Experiment 7 — Warp Divergence](#experiment-7--warp-divergence)
     - [Experiment 8 — Inspect the GPU](#experiment-8--inspect-the-gpu)
-- [What These Experiments Prove](#what-these-experiments-prove)
 - [The Mental Model](#the-mental-model)
 - [Important Limitations](#important-limitations)
 - [What Comes Next](#what-comes-next)
@@ -85,39 +84,11 @@ You will also see why:
 
 ## Requirements
 
-For full setup instructions and troubleshooting, see [`docs/setup.md`](../../docs/setup.md).
+- **Python:** Python 3.9+ and PyTorch — install via the [official selector](https://pytorch.org/get-started/locally/)
+- **CUDA:** an NVIDIA GPU, a working NVIDIA driver, and the CUDA Toolkit (`nvcc`)
+- The CUDA Toolkit version and the CUDA runtime used by PyTorch do not have to be identical — what matters is that the environment is compatible and the programs compile and run successfully
 
-### Python Requirements
-
-- Python 3.9+
-- PyTorch
-- An NVIDIA GPU with CUDA support (for the GPU experiments)
-
-Install PyTorch using the command appropriate for your system from the [official PyTorch installation page](https://pytorch.org/get-started/locally/), then verify:
-
-```bash
-python -c "import torch; print(torch.__version__)"
-```
-
-### CUDA Requirements
-
-- An NVIDIA GPU
-- A working NVIDIA driver
-- CUDA Toolkit (`nvcc`)
-
-Check the driver:
-
-```bash
-nvidia-smi
-```
-
-Check the CUDA compiler:
-
-```bash
-nvcc --version
-```
-
-> **Note:** The CUDA Toolkit version and the CUDA runtime used by PyTorch do not have to be identical. For these basic experiments, what matters is that your environment is compatible and the programs compile and run successfully.
+Full verification commands and troubleshooting: [`docs/setup.md`](../../docs/setup.md).
 
 ## Repository Structure
 
@@ -143,22 +114,24 @@ The experiments intentionally start very small. **Do not skip ahead.** The point
 
 ## Run Order
 
-All commands in this README assume your working directory is `labs/01-gpu-execution/`:
+All commands in this README assume your working directory is `01-gpu-execution/labs/`:
 
 ```bash
 cd 01-gpu-execution/labs
 ```
 
-| # | Experiment | File |
-|:--:|------------|------|
-| 1 | Find the GPU | [`python/01_device_check.py`](python/01_device_check.py) |
-| 2 | CPU vs. GPU | [`python/02_cpu_vs_gpu.py`](python/02_cpu_vs_gpu.py) |
-| 3 | Asynchronous Timing | [`python/03_async_timing.py`](python/03_async_timing.py) |
-| 4 | Hello, Threads | [`cuda/01_hello_threads.cu`](cuda/01_hello_threads.cu) |
-| 5 | Thread Indexing | [`cuda/02_thread_indexing.cu`](cuda/02_thread_indexing.cu) |
-| 6 | Warp Mapping | [`cuda/03_warp_mapping.cu`](cuda/03_warp_mapping.cu) |
-| 7 | Warp Divergence | [`cuda/04_divergence.cu`](cuda/04_divergence.cu) |
-| 8 | Device Properties | [`cuda/05_device_properties.cu`](cuda/05_device_properties.cu) |
+Run the experiments in order. The last column shows the concept(s) each one makes observable — after finishing, you should be able to connect every concept to something you actually ran:
+
+| # | Experiment | File | Concepts Made Observable |
+|:--:|------------|------|--------------------------|
+| 1 | Find the GPU | [`python/01_device_check.py`](python/01_device_check.py) | CUDA device |
+| 2 | CPU vs. GPU | [`python/02_cpu_vs_gpu.py`](python/02_cpu_vs_gpu.py) | CPU tensor, CUDA tensor, GPU computation |
+| 3 | Asynchronous Timing | [`python/03_async_timing.py`](python/03_async_timing.py) | Synchronization, asynchronous execution |
+| 4 | Hello, Threads | [`cuda/01_hello_threads.cu`](cuda/01_hello_threads.cu) | Kernel, thread |
+| 5 | Thread Indexing | [`cuda/02_thread_indexing.cu`](cuda/02_thread_indexing.cu) | Block, grid, thread indexing |
+| 6 | Warp Mapping | [`cuda/03_warp_mapping.cu`](cuda/03_warp_mapping.cu) | Warp, lane |
+| 7 | Warp Divergence | [`cuda/04_divergence.cu`](cuda/04_divergence.cu) | Divergence |
+| 8 | Device Properties | [`cuda/05_device_properties.cu`](cuda/05_device_properties.cu) | GPU hardware properties |
 
 Do not worry about memorizing everything. The goal is to make the hierarchy feel obvious.
 
@@ -356,24 +329,9 @@ The program reports useful hardware information, such as:
 
 The exact values depend on your GPU. This experiment connects the abstract execution model to the actual hardware sitting inside your machine.
 
-## What These Experiments Prove
-
-After running the lab, you should be able to connect each concept to something observable:
-
-| Experiment | Concepts Made Observable |
-|------------|--------------------------|
-| [`01_device_check.py`](python/01_device_check.py) | CUDA device |
-| [`02_cpu_vs_gpu.py`](python/02_cpu_vs_gpu.py) | CPU tensor, CUDA tensor, GPU computation |
-| [`03_async_timing.py`](python/03_async_timing.py) | Synchronization, asynchronous execution |
-| [`01_hello_threads.cu`](cuda/01_hello_threads.cu) | Kernel, thread |
-| [`02_thread_indexing.cu`](cuda/02_thread_indexing.cu) | Block, grid, thread indexing |
-| [`03_warp_mapping.cu`](cuda/03_warp_mapping.cu) | Warp, lane |
-| [`04_divergence.cu`](cuda/04_divergence.cu) | Divergence |
-| [`05_device_properties.cu`](cuda/05_device_properties.cu) | GPU hardware properties |
-
 ## The Mental Model
 
-After finishing the lab, you should be able to look at a CUDA kernel and mentally trace:
+After finishing the lab, you should be able to look at a CUDA kernel and mentally trace where it executes — the path from [What You Will Learn](#what-you-will-learn), extended one level deeper with the memory resources each thread consumes:
 
 ```text
 Kernel
@@ -393,27 +351,7 @@ Registers / Shared Memory / Cache
 Execution Resources
 ```
 
-And when looking at a PyTorch operation:
-
-```text
-Python
-   ↓
-PyTorch
-   ↓
-CUDA operation
-   ↓
-GPU kernel / optimized implementation
-   ↓
-Grid
-   ↓
-Blocks
-   ↓
-Warps
-   ↓
-SMs
-   ↓
-Execution + Memory
-```
+When looking at a PyTorch operation, trace the same path from the top — starting at Python, passing through the framework's optimized implementations, and arriving at the same kernel.
 
 ## Important Limitations
 
@@ -440,7 +378,7 @@ The next problem is:
 
 > **Where does the data come from — and why can a powerful GPU still spend its time waiting?**
 
-That is the subject of [Article 02 — GPU Memory](../../02-gpu-memory/) and its lab (`02-gpu-memory/labs/`), where we will measure:
+That is the subject of [Article 02 — GPU Memory](../../docs/roadmap.md#part-02--gpu-memory) (planned) and its future lab, where we will measure:
 
 - memory bandwidth
 - coalesced access
@@ -469,7 +407,7 @@ This lab is part of the [GPU Architecture for AI](../../README.md) project and i
 <p align="center">
 <sub>
 <a href="../../README.md">Main README</a> ·
-<a href="../../01-gpu-execution/README.md">Article 01</a> ·
+<a href="../README.md">Article 01</a> ·
 <a href="../../docs/setup.md">Setup</a> ·
 <a href="../../docs/roadmap.md">Roadmap</a> ·
 <a href="../../docs/glossary.md">Glossary</a>
